@@ -16,7 +16,7 @@ const FEATURES = [
   { icon: Package, label: 'Parcel Tracking', desc: 'Real-time GPS tracking on every route' },
   { icon: Shield, label: 'OTP Secured', desc: '6-digit OTP + digital signature on delivery' },
   { icon: Zap, label: 'Instant Booking', desc: 'Book in under 2 minutes, drop off anytime' },
-  { icon: MapPin, label: 'Pune District', desc: 'Serving 302K+ people across 79 villages' },
+  { icon: MapPin, label: 'Pune Pilot', desc: 'Pilot area: Pune + 7 nearby towns' },
 ];
 
 export const LoginPage = () => {
@@ -115,8 +115,8 @@ export const LoginPage = () => {
         </div>
 
         {/* Bottom stat */}
-        <p className="text-slate-600 text-sm animate-fadeInUp">
-          Trusted by 302,452 people · Pune, Maharashtra
+        <p className="text-center text-xs text-slate-500 mt-6">
+          Pilot Phase · Pune District, Maharashtra
         </p>
       </div>
 

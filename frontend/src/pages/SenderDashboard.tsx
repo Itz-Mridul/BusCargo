@@ -65,8 +65,8 @@ export const SenderDashboard = () => {
         </div>
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="text-left flex-1 space-y-4 animate-slideInLeft">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-semibold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" /> Live · Pune District Pilot
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-200 text-xs font-semibold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" /> Pilot Phase · Pune District
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white leading-tight">
               Good {greeting}, <br />
@@ -102,15 +102,16 @@ export const SenderDashboard = () => {
       {/* ── IMPACT STATS BAR ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { value: '302K+', label: 'People Reached', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' },
-          { value: '79',    label: 'Villages Covered', icon: MapPin, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' },
-          { value: '40-55%',label: 'Cheaper vs Courier', icon: TrendingUp, color: 'text-violet-600', bg: 'bg-violet-50', border: 'border-violet-100' },
-          { value: '30s',   label: 'Avg Scan Time', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100' },
+          { value: '302K+', label: 'Target Reach (Kopargaon region)', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', isTarget: true },
+          { value: '79',    label: 'Villages in Pilot Area', icon: MapPin, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', isTarget: false },
+          { value: '40–55%', label: 'Projected Cost Savings', icon: TrendingUp, color: 'text-violet-600', bg: 'bg-violet-50', border: 'border-violet-100', isTarget: true },
+          { value: '< 30s', label: 'Target Scan Time', icon: Zap, color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', isTarget: true },
         ].map((s, i) => (
           <div key={i} className={`card-3d stagger-${i+1} ${s.bg} border ${s.border} rounded-2xl p-5 flex flex-col items-center text-center`}>
             <s.icon className={`w-6 h-6 ${s.color} mb-2`} />
             <p className={`text-3xl font-black ${s.color} tracking-tight`}>{s.value}</p>
             <p className="text-xs font-medium text-slate-600 mt-1">{s.label}</p>
+            {s.isTarget && <span className="mt-2 text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">TARGET</span>}
           </div>
         ))}
       </div>
