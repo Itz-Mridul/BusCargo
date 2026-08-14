@@ -5,7 +5,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { trackParcel, getBusPosition } from '../lib/api';
 import { StatusBadge } from '../components/StatusBadge';
-import { Package, MapPin, Clock, ArrowRight, Navigation } from 'lucide-react';
+import { Package, MapPin, Clock, ArrowRight, Navigation, PhoneCall, ShieldAlert, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 // Fix leaflet default icon
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -45,6 +46,8 @@ export const TrackingPage = () => {
   const [parcel, setParcel] = useState<any>(null);
   const [busPos, setBusPos] = useState<any>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  const qrValue = trackingId ? (sessionStorage.getItem(`qr_${trackingId}`) || `BUSCARGO:${trackingId}`) : `BUSCARGO:${trackingId}`;
 
   useEffect(() => {
     if (trackingId) {
@@ -190,15 +193,52 @@ export const TrackingPage = () => {
         </MapContainer>
       </div>
 
-      {/* OTP Reminder */}
-      {(parcel.status === 'ARRIVED' || parcel.status === 'IN_TRANSIT') && (
-        <div className="glass-card rounded-xl p-4 border border-yellow-300 bg-yellow-50">
-          <p className="text-sm text-yellow-800 font-semibold">📦 Parcel Ready for Delivery</p>
-          <p className="text-sm text-yellow-700 mt-1">
-            Go to <Link to="/delivery/confirm" className="text-blue-600 underline">Delivery Confirmation</Link> and enter the OTP to complete delivery.
-          </p>
+      {/* Delivery & Contact Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* QR Code for Pickup */}
+        <div className="glass-card rounded-xl p-5 border border-gray-200 bg-white flex items-center gap-6">
+          <div className="p-3 bg-white rounded-xl shadow-md border border-gray-100 flex-shrink-0">
+            <QRCodeSVG value={qrValue} size={90} level="H" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-1">
+              <QrCode className="w-4 h-4 text-blue-600" /> Pickup QR Code
+            </h3>
+            <p className="text-sm text-gray-500 mb-2">Show this QR code at the destination depot to claim your parcel securely.</p>
+            {(parcel.status === 'ARRIVED' || parcel.status === 'IN_TRANSIT') && (
+              <p className="text-xs text-blue-600 font-medium">Ready for pickup at {parcel.destDepot?.name}</p>
+            )}
+          </div>
         </div>
-      )}
+
+        {/* Emergency Contacts */}
+        <div className="glass-card rounded-xl p-5 border border-gray-200 bg-white">
+          <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-4">
+            <ShieldAlert className="w-4 h-4 text-red-500" /> Support & Emergency Contacts
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-gray-600">
+                <PhoneCall className="w-3.5 h-3.5" /> Bus Driver (Active)
+              </span>
+              <a href="tel:+919876543210" className="font-mono font-medium text-blue-600">+91 98765 43210</a>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-gray-600">
+                <PhoneCall className="w-3.5 h-3.5" /> Central Support
+              </span>
+              <a href="tel:1800221949" className="font-mono font-medium text-gray-900">1800 221 949</a>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 text-gray-600">
+                <PhoneCall className="w-3.5 h-3.5" /> Emergency Helpline
+              </span>
+              <a href="tel:112" className="font-mono font-medium text-red-600">112</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
