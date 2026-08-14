@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import { scanQR } from '../lib/api';
+import { scanQR, confirmDelivery } from '../lib/api';
 import { StatusBadge } from '../components/StatusBadge';
-import { Scan, Keyboard, CheckCircle2, AlertCircle, Loader } from 'lucide-react';
+import { Scan, Keyboard, CheckCircle2, AlertCircle, Loader, KeyRound } from 'lucide-react';
 
 export const ScanPage = () => {
   const [manualCode, setManualCode] = useState('');
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Handover state
+  const [handoverOtp, setHandoverOtp] = useState('');
+  const [handoverLoading, setHandoverLoading] = useState(false);
+  const [handoverSuccess, setHandoverSuccess] = useState(false);
   const [mode, setMode] = useState<'camera' | 'manual'>('camera');
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
   const scannedRef = useRef(false);
@@ -62,7 +67,26 @@ export const ScanPage = () => {
     setResult(null);
     setError('');
     setManualCode('');
+    setHandoverOtp('');
+    setHandoverSuccess(false);
     scannedRef.current = false;
+  };
+
+  const handleHandover = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!result?.parcel?.trackingId) return;
+    
+    setHandoverLoading(true);
+    setError('');
+    try {
+      await confirmDelivery(result.parcel.trackingId, handoverOtp);
+      setHandoverSuccess(true);
+      setResult({ ...result, parcel: { ...result.parcel, status: 'DELIVERED' } });
+    } catch (err: any) {
+      setError(err?.response?.data?.error || 'Invalid OTP. Please try again.');
+    } finally {
+      setHandoverLoading(false);
+    }
   };
 
   return (
@@ -169,9 +193,29 @@ export const ScanPage = () => {
                 <p className="text-xs text-teal-400">🚌 Bus simulation started — parcel is now moving on the map (sped up ×20 for demo)</p>
               </div>
             )}
-            {result.parcel?.status === 'ARRIVED' && (
-              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
-                <p className="text-xs text-amber-400">📦 Parcel arrived at destination. Receiver can now confirm with OTP.</p>
+            {result.parcel?.status === 'ARRIVED' && !handoverSuccess && (
+              <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                <p className="text-sm font-semibold text-amber-400 mb-2">📦 Ready for Handover</p>
+                <form onSubmit={handleHandover} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={handoverOtp}
+                    onChange={e => setHandoverOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    placeholder="Enter 6-digit OTP"
+                    className="input-field flex-1 text-center font-mono tracking-widest text-lg"
+                    maxLength={6}
+                    required
+                  />
+                  <button type="submit" disabled={handoverLoading || handoverOtp.length !== 6} className="btn-primary whitespace-nowrap disabled:opacity-50">
+                    {handoverLoading ? <Loader className="w-4 h-4 animate-spin" /> : 'Confirm'}
+                  </button>
+                </form>
+              </div>
+            )}
+            {result.parcel?.status === 'DELIVERED' && (
+              <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <p className="text-sm text-emerald-400 font-semibold">Parcel Handed Over Successfully!</p>
               </div>
             )}
           </div>
