@@ -1,63 +1,28 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
 import prisma from '../lib/prisma';
 import { authenticate } from '../middleware/auth';
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const getJwtSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET must be set before the API can start.');
+  return secret;
+};
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 router.post('/login', async (req, res) => {
-  const { email, password, rememberMe, adminKey, isAdminLogin } = req.body;
+  const { email, password, rememberMe } = req.body;
   
   try {
-    if (isAdminLogin || adminKey) {
-      try {
-        const keyPath = path.join(__dirname, '../../admin_key.txt');
-        const validKey = fs.readFileSync(keyPath, 'utf-8').trim();
-        if (adminKey !== validKey) {
-          res.status(401).json({ error: 'Invalid Admin Key' });
-          return;
-        }
-      } catch (e) {
-        console.error('Admin key file missing or unreadable', e);
-        res.status(500).json({ error: 'Admin configuration error' });
-        return;
-      }
-
-      let user = await prisma.user.findFirst({ where: { role: 'ADMIN' } });
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            role: 'ADMIN',
-            name: 'System Admin',
-            email: 'admin@buscargo.local',
-            passwordHash: await bcrypt.hash('admin123', 10),
-          }
-        });
-      }
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          loginCount: { increment: 1 },
-          lastLoginAt: new Date()
-        }
-      });
-
-      const expiresIn = rememberMe ? '90d' : '24h';
-      const token = jwt.sign(
-        { id: user.id, email: user.email, role: user.role, name: user.name },
-        JWT_SECRET,
-        { expiresIn }
-      );
-
-      return res.json({ token, user: { id: user.id, email: user.email, role: user.role, name: user.name } });
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    if (!normalizedEmail || typeof password !== 'string') {
+      res.status(400).json({ error: 'Email and password are required.' });
+      return;
     }
-
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
        res.status(401).json({ error: 'Invalid credentials' });
        return;
@@ -75,7 +40,7 @@ router.post('/login', async (req, res) => {
     const expiresIn = rememberMe ? '90d' : '24h';
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, name: user.name },
-      JWT_SECRET,
+        getJwtSecret(),
       { expiresIn }
     );
 
@@ -90,14 +55,20 @@ router.get('/me', authenticate, async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { name, email, phone, password, role } = req.body;
+  const { name, email, phone, password } = req.body;
   try {
-    if (!name || !email || !password) {
+    const normalizedName = typeof name === 'string' ? name.trim() : '';
+    const normalizedEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    if (!normalizedName || !normalizedEmail || typeof password !== 'string') {
       res.status(400).json({ error: 'Name, email and password are required' });
       return;
     }
+    if (normalizedName.length > 80 || !emailPattern.test(normalizedEmail) || password.length < 8 || password.length > 128) {
+      res.status(400).json({ error: 'Use a valid email and a password between 8 and 128 characters.' });
+      return;
+    }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findUnique({ where: { email: normalizedEmail } });
     if (existingUser) {
       res.status(400).json({ error: 'Email already registered' });
       return;
@@ -107,11 +78,11 @@ router.post('/register', async (req, res) => {
 
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
-        phone: phone || null,
+        name: normalizedName,
+        email: normalizedEmail,
+        phone: typeof phone === 'string' ? phone.trim().slice(0, 20) || null : null,
         passwordHash,
-        role: role || 'SENDER',
+        role: 'SENDER',
         loginCount: 1,
         lastLoginAt: new Date()
       }
@@ -119,7 +90,7 @@ router.post('/register', async (req, res) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, name: user.name },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: '24h' }
     );
 

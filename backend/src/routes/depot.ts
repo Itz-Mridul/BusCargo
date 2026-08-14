@@ -24,17 +24,21 @@ router.post('/scan', authenticate, requireRole(['STAFF', 'ADMIN']), async (req, 
 
     let updatedParcel;
     if (parcel.status === 'BOOKED') {
-      const bus = await prisma.bus.findFirst();
+      const bus = parcel.busId
+        ? await prisma.bus.findUnique({ where: { id: parcel.busId } })
+        : await prisma.bus.findFirst({ where: { route: { stops: { some: { depotId: parcel.originDepotId } } }, status: 'IDLE' } });
+      if (!bus) {
+        res.status(409).json({ error: 'No available bus is assigned to this route yet.' });
+        return;
+      }
       updatedParcel = await prisma.parcel.update({
         where: { id: parcel.id },
-        data: { status: 'IN_TRANSIT', busId: bus?.id }
+        data: { status: 'IN_TRANSIT', busId: bus.id }
       });
       await prisma.scanEvent.create({
         data: { parcelId: parcel.id, staffId, eventType: 'LOADED' }
       });
-      if (bus) {
-        startSimulation(parcel.id, bus.id);
-      }
+      startSimulation(parcel.id, bus.id);
     } else if (parcel.status === 'IN_TRANSIT') {
       updatedParcel = await prisma.parcel.update({
         where: { id: parcel.id },

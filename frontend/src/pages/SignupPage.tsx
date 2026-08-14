@@ -19,14 +19,14 @@ export const SignupPage = () => {
       setError('Passwords do not match.');
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.');
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
       return;
     }
     setLoading(true);
     setError('');
     try {
-      await register({ name, email, password, role: 'SENDER' });
+      await register({ name, email, password });
       navigate('/');
     } catch (err: any) {
       setError(err?.response?.data?.error || 'Failed to create account. Please try again.');
@@ -92,7 +92,7 @@ export const SignupPage = () => {
               <input
                 type="password"
                 id="signup-password"
-                placeholder="Password (min. 6 characters)"
+                placeholder="Password (min. 8 characters)"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="input-field pl-10"

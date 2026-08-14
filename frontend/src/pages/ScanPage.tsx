@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { scanQR, confirmDelivery } from '../lib/api';
 import { StatusBadge } from '../components/StatusBadge';
-import { Scan, Keyboard, CheckCircle2, AlertCircle, Loader, KeyRound } from 'lucide-react';
+import { Scan, Keyboard, CheckCircle2, AlertCircle, Loader } from 'lucide-react';
 
 export const ScanPage = () => {
   const [manualCode, setManualCode] = useState('');

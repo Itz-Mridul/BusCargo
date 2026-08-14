@@ -4,9 +4,9 @@ import { authenticate, requireRole } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/ledger/:parcelId', async (req, res) => {
+router.get('/ledger/:parcelId', authenticate, requireRole(['ADMIN']), async (req, res) => {
   try {
-    const { parcelId } = req.params;
+    const parcelId = String(req.params.parcelId);
     const transaction = await prisma.transaction.findFirst({
       where: { parcelId }
     });

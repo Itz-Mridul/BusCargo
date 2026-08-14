@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { trackParcel, getBusPosition } from '../lib/api';
 import { StatusBadge } from '../components/StatusBadge';
-import { Package, MapPin, Clock, ArrowRight, Navigation, PhoneCall, ShieldAlert, QrCode } from 'lucide-react';
+import { Navigation, PhoneCall, ShieldAlert, QrCode } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
 // Fix leaflet default icon

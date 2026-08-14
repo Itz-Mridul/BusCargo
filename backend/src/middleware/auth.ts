@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secret';
+const getJwtSecret = (): string => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error('JWT_SECRET must be set before the API can start.');
+  return secret;
+};
 
 export interface AuthUser {
   id: string;
@@ -27,7 +31,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as AuthUser;
+    const decoded = jwt.verify(token, getJwtSecret(), { algorithms: ['HS256'] }) as AuthUser;
     req.user = decoded;
     next();
   } catch (error) {

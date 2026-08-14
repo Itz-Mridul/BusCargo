@@ -9,15 +9,18 @@ datasource db {
 
 model User {
   id            String    @id @default(uuid())
-  role          String    // SENDER, STAFF, ADMIN
+  role          String    // SENDER, STAFF, ADMIN, DRIVER
   name          String
   email         String    @unique
   phone         String?   // optional phone number
   passwordHash  String
   loginCount    Int       @default(0)
   lastLoginAt   DateTime?
+  currentLat    Float?    // For DRIVER live location
+  currentLng    Float?
   createdAt     DateTime  @default(now())
   parcels       Parcel[]  @relation("SenderParcels")
+  driverParcels Parcel[]  @relation("DriverParcels")
 }
 
 model City {
@@ -86,10 +89,12 @@ model Parcel {
   destDepot       Depot         @relation("DestDepot", fields: [destDepotId], references: [id])
   busId           String?
   bus             Bus?          @relation(fields: [busId], references: [id])
+  driverId        String?
+  driver          User?         @relation("DriverParcels", fields: [driverId], references: [id])
   receiverName    String        @default("")
   receiverPhone   String        @default("")
   weight          Float         @default(1)
-  serviceType     String        @default("INTERCITY")
+  serviceType     String        @default("INTERCITY") // INTERCITY, LOCAL, PEER_TO_PEER
   price           Float
   status          String        // BOOKED, IN_TRANSIT, ARRIVED, DELIVERED
   qrCode          String        @default("")

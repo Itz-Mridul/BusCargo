@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getCities, createBooking } from '../lib/api';
-import axios from 'axios';
-import { Package, MapPin, User, Phone, ArrowRight, Loader, Bus, CheckCircle2, Shield, CreditCard, X, Lock } from 'lucide-react';
-
-const api = axios.create({ baseURL: 'http://localhost:3001/api' });
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import api, { getCities, createBooking } from '../lib/api';
+import { Package, MapPin, User, Phone, ArrowRight, Bus, CheckCircle2, Shield, X, Lock } from 'lucide-react';
 
 export const BookingPage = () => {
   const [scope, setScope] = useState<'INTERCITY' | 'LOCAL'>('INTERCITY');
@@ -160,21 +152,21 @@ export const BookingPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <div className="glass-card rounded-xl p-6 border border-slate-700/50 shadow-xl">
+          <div className="glass-card rounded-xl p-6 shadow-sm">
             {error && (
               <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">{error}</div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div>
-                <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-teal-400" /> 1. Select Service Mode
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-blue-600" /> 1. Select service
                 </h3>
                 <div className="flex gap-4">
                   <button 
                     type="button"
                     onClick={() => setScope('INTERCITY')}
-                    className={`flex-1 p-3 rounded-lg border flex flex-col items-center gap-2 transition-all ${scope === 'INTERCITY' ? 'border-teal-500 bg-teal-500/10 text-teal-400' : 'border-slate-700 bg-slate-800 text-slate-400'}`}>
+                    className={`flex-1 p-3 rounded-lg border flex flex-col items-center gap-2 transition-all ${scope === 'INTERCITY' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600'}`}>
                     <Bus className="w-6 h-6" />
                     <span className="text-sm font-medium">Inter-City (MSRTC)</span>
                     <span className="text-xs opacity-75">Long haul, max {maxWeight}kg</span>
@@ -182,7 +174,7 @@ export const BookingPage = () => {
                   <button 
                     type="button"
                     onClick={() => setScope('LOCAL')}
-                    className={`flex-1 p-3 rounded-lg border flex flex-col items-center gap-2 transition-all ${scope === 'LOCAL' ? 'border-teal-500 bg-teal-500/10 text-teal-400' : 'border-slate-700 bg-slate-800 text-slate-400'}`}>
+                    className={`flex-1 p-3 rounded-lg border flex flex-col items-center gap-2 transition-all ${scope === 'LOCAL' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600'}`}>
                     <Bus className="w-6 h-6" />
                     <span className="text-sm font-medium">Local City (PMPML)</span>
                     <span className="text-xs opacity-75">Same-day, max {maxWeight}kg</span>
@@ -191,12 +183,12 @@ export const BookingPage = () => {
               </div>
 
               <div>
-                <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-teal-400" /> 2. Location
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-blue-600" /> 2. Location
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
-                    <label className="block text-xs text-slate-400">Origin City</label>
+                    <label className="block text-xs text-gray-500">Origin City</label>
                     <select value={originCityId} onChange={e => setOriginCityId(e.target.value)} required className="select-field">
                       <option value="">Select Origin City</option>
                       {availableCities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -204,7 +196,7 @@ export const BookingPage = () => {
                     
                     {originCityId && (
                       <>
-                        <label className="block text-xs text-slate-400">Origin Depot/Stop</label>
+                        <label className="block text-xs text-gray-500">Origin Depot/Stop</label>
                         <select value={origin} onChange={e => setOrigin(e.target.value)} required className="select-field">
                           <option value="">Select Origin</option>
                           {originDepots.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -214,7 +206,7 @@ export const BookingPage = () => {
                   </div>
                   
                   <div className="space-y-3">
-                    <label className="block text-xs text-slate-400">Destination City</label>
+                    <label className="block text-xs text-gray-500">Destination City</label>
                     <select value={destCityId} onChange={e => setDestCityId(e.target.value)} required disabled={scope === 'LOCAL'} className="select-field disabled:opacity-50">
                       <option value="">Select Destination City</option>
                       {availableCities.filter(c => scope === 'LOCAL' || c.id !== originCityId).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -222,7 +214,7 @@ export const BookingPage = () => {
 
                     {destCityId && (
                       <>
-                        <label className="block text-xs text-slate-400">Destination Depot/Stop</label>
+                        <label className="block text-xs text-gray-500">Destination Depot/Stop</label>
                         <select value={destination} onChange={e => setDestination(e.target.value)} required className="select-field">
                           <option value="">Select Destination</option>
                           {destDepots.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}

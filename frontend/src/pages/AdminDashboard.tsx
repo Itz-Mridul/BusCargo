@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getMetrics } from '../lib/api';
 import { Package, TrendingUp, Truck, CheckCircle2, BarChart3, IndianRupee, ArrowRight, User } from 'lucide-react';

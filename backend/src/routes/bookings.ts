@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+import { randomInt } from 'crypto';
 import prisma from '../lib/prisma';
 import { authenticate, requireRole } from '../middleware/auth';
 
@@ -13,12 +14,33 @@ router.post('/', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, res
     if (!['INTERCITY', 'LOCAL'].includes(serviceType)) {
       return res.status(400).json({ error: 'Invalid serviceType. Must be INTERCITY or LOCAL.' });
     }
+    const numericWeight = Number(weight);
+    const maxWeight = serviceType === 'INTERCITY' ? 20 : 8;
+    if (!Number.isFinite(numericWeight) || numericWeight < 0.1 || numericWeight > maxWeight) {
+      return res.status(400).json({ error: `Weight must be between 0.1 and ${maxWeight} kg.` });
+    }
+    if (typeof receiverName !== 'string' || receiverName.trim().length < 2 || receiverName.trim().length > 80 ||
+        typeof receiverPhone !== 'string' || !/^\+?[0-9\s-]{8,20}$/.test(receiverPhone.trim())) {
+      return res.status(400).json({ error: 'Enter a valid receiver name and phone number.' });
+    }
 
     const originDepot = await prisma.depot.findUnique({ where: { id: originDepotId } });
     const destDepot = await prisma.depot.findUnique({ where: { id: destDepotId } });
 
     if (!originDepot || !destDepot) {
       return res.status(404).json({ error: 'Depots not found' });
+    }
+    if (originDepotId === destDepotId) return res.status(400).json({ error: 'Origin and destination must be different.' });
+
+    const route = await prisma.route.findUnique({
+      where: { id: routeId },
+      include: { stops: { orderBy: { stopOrder: 'asc' } } }
+    });
+    if (!route || route.type !== serviceType) return res.status(400).json({ error: 'Select an available route for this service.' });
+    const originIndex = route.stops.findIndex(stop => stop.depotId === originDepotId);
+    const destinationIndex = route.stops.findIndex(stop => stop.depotId === destDepotId);
+    if (originIndex < 0 || destinationIndex < 0 || originIndex >= destinationIndex) {
+      return res.status(400).json({ error: 'The selected route does not serve this journey in that direction.' });
     }
 
     if (serviceType === 'LOCAL' && originDepot.cityId !== destDepot.cityId) {
@@ -31,18 +53,18 @@ router.post('/', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, res
 
     let price = 0;
     if (serviceType === 'INTERCITY') {
-      price = 50 + (weight * 15) + 20;
+      price = 50 + (numericWeight * 15) + 20;
     } else {
-      price = 25 + (weight * 8) + 10;
+      price = 25 + (numericWeight * 8) + 10;
     }
 
-    const trackingId = `BC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Math.floor(10000 + Math.random() * 90000)}`;
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const trackingId = `BC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${randomInt(100000, 1000000)}`;
+    const otp = randomInt(100000, 1000000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
     const qrCode = `BUSCARGO:${trackingId}`;
 
     const bus = await prisma.bus.findFirst({
-      where: { routeId }
+      where: { routeId: route.id, status: 'IDLE' }
     });
 
     const parcel = await prisma.parcel.create({
@@ -53,7 +75,9 @@ router.post('/', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, res
         destDepotId,
         busId: bus?.id,
         serviceType,
-        weight,
+        receiverName: receiverName.trim(),
+        receiverPhone: receiverPhone.trim(),
+        weight: numericWeight,
         price,
         status: 'BOOKED',
         qrCode,
@@ -110,7 +134,8 @@ router.get('/:trackingId/track', async (req, res) => {
        return;
     }
 
-    res.json(parcel);
+    const { otpHash, senderId, receiverPhone, ...safeParcel } = parcel;
+    res.json(safeParcel);
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

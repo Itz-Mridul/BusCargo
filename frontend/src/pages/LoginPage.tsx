@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bus, Lock, Mail, ChevronRight, Shield, CheckSquare, Square } from 'lucide-react';
+import { Bus, Lock, Mail, ChevronRight } from 'lucide-react';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [adminKey, setAdminKey] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
@@ -19,7 +16,7 @@ export const LoginPage = () => {
     setLoading(true);
     setError('');
     try {
-      await login(email, password, rememberMe, isAdmin ? adminKey : '', isAdmin);
+      await login(email, password, false);
       navigate('/');
     } catch (err: any) {
       setError(err?.response?.data?.error || 'Invalid credentials. Please try again.');
@@ -45,18 +42,11 @@ export const LoginPage = () => {
 
         {/* Card */}
         <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-2xl">
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6">
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
               <p className="text-sm text-gray-500 mt-0.5">Welcome back</p>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsAdmin(!isAdmin)}
-              className={`text-xs font-medium px-2 py-1 rounded border transition-colors ${isAdmin ? 'bg-red-50 text-red-600 border-red-200' : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100'}`}
-            >
-              Admin Mode
-            </button>
           </div>
 
           {error && (
@@ -66,8 +56,6 @@ export const LoginPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {!isAdmin && (
-              <>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -77,7 +65,7 @@ export const LoginPage = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     className="input-field pl-10"
-                    required={!isAdmin}
+                    required
                     autoComplete="email"
                   />
                 </div>
@@ -90,45 +78,22 @@ export const LoginPage = () => {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     className="input-field pl-10"
-                    required={!isAdmin}
+                    required
                     autoComplete="current-password"
                   />
                 </div>
-              </>
-            )}
 
-            {isAdmin && (
-              <div className="relative animate-fadeIn">
-                <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-red-400" />
-                <input
-                  type="password"
-                  id="login-admin-key"
-                  placeholder="Admin Security Key"
-                  value={adminKey}
-                  onChange={e => setAdminKey(e.target.value)}
-                  className="input-field pl-10 border-red-200 focus:border-red-500 focus:ring-red-500"
-                  required={isAdmin}
-                  autoComplete="off"
-                />
-                <p className="text-xs text-gray-400 mt-1 ml-1">No email required — admin key grants direct access</p>
-              </div>
-            )}
-
-            <div className="flex items-center text-sm text-gray-600 cursor-pointer select-none" onClick={() => setRememberMe(!rememberMe)}>
-              {rememberMe ? <CheckSquare className="w-4 h-4 text-blue-600 mr-2" /> : <Square className="w-4 h-4 text-gray-400 mr-2" />}
-              Stay logged in for 3 months
-            </div>
 
             <button
               type="submit"
               id="login-submit"
               disabled={loading}
-              className={`btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${isAdmin ? 'bg-red-600 hover:bg-red-700 shadow-red-500/30' : ''}`}
+              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <>Sign In {isAdmin && 'as Admin'}<ChevronRight className="w-4 h-4" /></>
+                <>Sign In <ChevronRight className="w-4 h-4" /></>
               )}
             </button>
           </form>

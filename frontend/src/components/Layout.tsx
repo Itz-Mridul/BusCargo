@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, Package, Scan, LayoutDashboard, FileText, KeyRound, IndianRupee, Bus } from 'lucide-react';
+import { LogOut, Package, Scan, LayoutDashboard, KeyRound, Bus } from 'lucide-react';
 
 const NAV_CONFIG: Record<string, { label: string; path: string; icon: React.FC<any> }[]> = {
   SENDER: [
@@ -23,12 +23,6 @@ export const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const navItems = user?.role ? NAV_CONFIG[user.role] || [] : [];
-
-  const roleColors: Record<string, string> = {
-    SENDER: 'text-teal-400 bg-teal-500/20',
-    STAFF: 'text-blue-400 bg-blue-500/20',
-    ADMIN: 'text-purple-400 bg-purple-500/20',
-  };
 
   return (
     <div className="min-h-screen flex bg-gray-50 text-gray-900">

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { CheckCircle, MapPin, Package, Navigation, Copy, CheckCheck } from 'lucide-react';
+import { CheckCircle, Package, Navigation, Copy, CheckCheck } from 'lucide-react';
 import { trackParcel } from '../lib/api';
 
 export const BookingConfirmPage = () => {

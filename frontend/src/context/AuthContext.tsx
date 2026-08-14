@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [token]);
 
-  const login = async (email: string, password: string, rememberMe: boolean = false, adminKey: string = '', isAdminLogin: boolean = false) => {
-    const res = await apiLogin(email, password, rememberMe, adminKey, isAdminLogin);
+  const login = async (email: string, password: string, rememberMe: boolean = false) => {
+    const res = await apiLogin(email, password, rememberMe);
     const { token: newToken, user: newUser } = res.data;
     localStorage.setItem('buscargo_token', newToken);
     setToken(newToken);
@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Register creates the account and auto-logs in (returns token directly from server)
-  const register = async (data: { name: string; email: string; password: string; role?: string }) => {
+  const register = async (data: { name: string; email: string; password: string }) => {
     const res = await apiRegister(data);
     const { token: newToken, user: newUser } = res.data;
     localStorage.setItem('buscargo_token', newToken);
