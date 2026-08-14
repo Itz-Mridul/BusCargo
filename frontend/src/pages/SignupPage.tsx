@@ -140,7 +140,7 @@ export const SignupPage = () => {
         </div>
 
         <p className="text-center text-xs text-slate-500 mt-6">
-          Serving 302,452 people across 79 villages · Maharashtra, India
+          Pilot Phase · Pune District, Maharashtra
         </p>
       </div>
     </div>
