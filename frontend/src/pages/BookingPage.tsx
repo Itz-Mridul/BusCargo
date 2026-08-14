@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCities, createBooking } from '../lib/api';
 import axios from 'axios';
-import { Package, MapPin, User, Phone, Weight, ArrowRight, Loader, Bus } from 'lucide-react';
+import { Package, MapPin, User, Phone, ArrowRight, Loader, Bus, CheckCircle2, Shield, CreditCard, X, Lock } from 'lucide-react';
 
 const api = axios.create({ baseURL: 'http://localhost:3001/api' });
 api.interceptors.request.use((config) => {
@@ -33,6 +33,11 @@ export const BookingPage = () => {
   const [receiverPhone, setReceiverPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Payment Modal state
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentStep, setPaymentStep] = useState<'CARD_ENTRY' | 'PROCESSING' | 'SUCCESS'>('CARD_ENTRY');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,9 +103,22 @@ export const BookingPage = () => {
   const platformShare = Math.round(total * 0.3);
   const agentShare = Math.round(total * 0.1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (origin === destination) { setError('Origin and destination cannot be the same.'); return; }
+    setShowPayment(true);
+    setPaymentStep('CARD_ENTRY');
+  };
+
+  const processPayment = async () => {
+    setPaymentStep('PROCESSING');
+    
+    // Simulate network delay for payment processing
+    await new Promise(r => setTimeout(r, 2000));
+    setPaymentStep('SUCCESS');
+    
+    // Briefly show success before calling API
+    await new Promise(r => setTimeout(r, 1000));
     setLoading(true);
     setError('');
     try {
@@ -117,6 +135,7 @@ export const BookingPage = () => {
       sessionStorage.setItem(`qr_${res.data.parcel.trackingId}`, res.data.qrData);
       navigate(`/sender/booking/${res.data.parcel.trackingId}`);
     } catch (err: any) {
+      setShowPayment(false);
       setError(err?.response?.data?.error || 'Failed to create booking. Please try again.');
     } finally {
       setLoading(false);
@@ -316,6 +335,88 @@ export const BookingPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Gateway Modal */}
+      {showPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col relative animate-bounceIn">
+            
+            {/* Header */}
+            <div className="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-emerald-500" />
+                <span className="font-semibold text-gray-900">Secure Checkout</span>
+              </div>
+              {paymentStep === 'CARD_ENTRY' && (
+                <button onClick={() => setShowPayment(false)} className="text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+
+            <div className="p-6">
+              {paymentStep === 'CARD_ENTRY' && (
+                <div className="space-y-5 animate-fadeIn">
+                  <div className="text-center mb-6">
+                    <p className="text-sm text-gray-500 uppercase tracking-wide">Total Amount</p>
+                    <p className="text-4xl font-bold text-gray-900 mt-1">₹{total}</p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Card Number</label>
+                      <div className="relative">
+                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input type="text" placeholder="4111 1111 1111 1111" className="input-field pl-10 border-gray-200 text-gray-900 bg-white" defaultValue="4111 1111 1111 1111" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Expiry</label>
+                        <input type="text" placeholder="12/28" className="input-field border-gray-200 text-gray-900 bg-white" defaultValue="12/28" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">CVV</label>
+                        <input type="password" placeholder="123" className="input-field border-gray-200 text-gray-900 bg-white" defaultValue="123" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={processPayment}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-blue-500/30 mt-6 flex items-center justify-center gap-2">
+                    Pay ₹{total} Securely
+                  </button>
+                </div>
+              )}
+
+              {paymentStep === 'PROCESSING' && (
+                <div className="text-center py-10 animate-fadeIn flex flex-col items-center">
+                  <div className="w-16 h-16 border-4 border-gray-100 border-t-blue-600 rounded-full animate-spin mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900">Processing Payment...</h3>
+                  <p className="text-sm text-gray-500 mt-2">Please do not close this window.</p>
+                </div>
+              )}
+
+              {paymentStep === 'SUCCESS' && (
+                <div className="text-center py-10 animate-fadeIn flex flex-col items-center">
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900">Payment Successful!</h3>
+                  <p className="text-sm text-gray-500 mt-2">Generating your booking receipt...</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
+              <p className="text-[10px] text-gray-400 flex items-center justify-center gap-1">
+                <Lock className="w-3 h-3" /> 256-bit SSL Encryption
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
