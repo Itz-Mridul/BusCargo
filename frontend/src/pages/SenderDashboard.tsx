@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMetrics } from '../lib/api';
 import { Package, TrendingUp, Truck, CheckCircle2, Plus, ArrowRight } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Package, TrendingUp, Truck, CheckCircle2, Plus, ArrowRight } from 'luci
 export const SenderDashboard = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     import('../lib/api').then(({ getMyBookings }) => {
@@ -49,19 +50,25 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* How it works */}
+      {/* Quick Actions (Functional Hackathon Links) */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {[
-          { icon: '📦', title: 'Book', desc: 'Select depots, enter weight, get QR + OTP instantly' },
-          { icon: '🔍', title: 'Scan', desc: 'Staff scans QR at origin depot — bus simulation starts' },
-          { icon: '🚌', title: 'Track', desc: 'Watch your bus move live on the map' },
-          { icon: '✅', title: 'Deliver', desc: 'Receiver enters OTP — loop closes, ledger auto-settles' },
+          { icon: '📦', title: 'Book', desc: 'Book a new parcel', action: () => navigate('/sender/book') },
+          { icon: '🔍', title: 'Scan', desc: 'Depot Staff Scanner', action: () => navigate('/staff/scan') },
+          { icon: '🚌', title: 'Track', desc: 'Track Live Parcel', action: () => {
+             const id = window.prompt("Enter Tracking ID (e.g., BC-...)");
+             if (id) navigate(`/sender/track/${id}`);
+          } },
+          { icon: '✅', title: 'Deliver', desc: 'Confirm OTP at end', action: () => navigate('/delivery/confirm') },
         ].map((step, i) => (
-          <div key={i} className="stat-card text-center bg-white">
+          <button 
+            key={i} 
+            onClick={step.action}
+            className="stat-card text-center bg-white cursor-pointer hover:scale-105 hover:shadow-lg transition-all border border-gray-100 hover:border-blue-300 w-full flex flex-col items-center justify-center">
             <div className="text-3xl mb-3">{step.icon}</div>
             <p className="font-semibold text-gray-900 text-sm">{step.title}</p>
             <p className="text-xs text-gray-500 mt-1">{step.desc}</p>
-          </div>
+          </button>
         ))}
       </div>
 
