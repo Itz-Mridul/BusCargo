@@ -24,8 +24,8 @@ if (!process.env.JWT_SECRET) {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5174,http://localhost:5175').split(',').map(o => o.trim());
-app.use(cors({ origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin || '')) }));
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173').split(',').map(origin => origin.trim());
+app.use(cors({ origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin)) }));
 app.use(express.json({ limit: '100kb' }));
 
 app.use('/api/auth', authRoutes);
@@ -42,17 +42,6 @@ app.use('/api', ledgerRoutes);
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
-});
-
-import path from 'path';
-const frontendDist = path.join(__dirname, '../../frontend/dist');
-app.use(express.static(frontendDist));
-app.use((req, res, next) => {
-  if (req.method === 'GET' && !req.path.startsWith('/api')) {
-    res.sendFile(path.join(frontendDist, 'index.html'));
-  } else {
-    next();
-  }
 });
 
 app.listen(PORT, async () => {
