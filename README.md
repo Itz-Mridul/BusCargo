@@ -51,6 +51,13 @@ Frontend runs at → `http://localhost:5173`
 
 ---
 
+## 🌐 Try the App (Live Demo)
+
+> **Live Public URL:** [https://silver-jars-hear.loca.lt](https://silver-jars-hear.loca.lt)  
+> *(Note: This is a temporary tunnel to the developer's local machine. If it says "Localtunnel Reminder", click "Click to Continue".)*
+
+If the link is down, you can run it locally by following the [setup instructions](#-getting-started) below.
+
 ## 🔑 Demo Login Credentials
 
 > Open `http://localhost:5173` — you will be taken to the login page first.

@@ -44,6 +44,17 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: 'Internal server error' });
 });
 
+import path from 'path';
+const frontendDist = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendDist));
+app.use((req, res, next) => {
+  if (req.method === 'GET' && !req.path.startsWith('/api')) {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  } else {
+    next();
+  }
+});
+
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   

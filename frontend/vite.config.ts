@@ -6,15 +6,6 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'map-vendor': ['leaflet', 'react-leaflet'],
-          'qr-vendor': ['qrcode.react', 'html5-qrcode'],
-        },
-      },
-    },
     chunkSizeWarningLimit: 1000,
   },
   server: {
