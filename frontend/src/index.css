@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #202124;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f3f4; }
+::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #bdc1c6; }
+
+@layer components {
+  .glass-card {
+    background: #ffffff;
+    border: 1px solid #dadce0;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-md transition-colors shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium py-2.5 px-6 rounded-md transition-colors;
+  }
+
+  .input-field {
+    @apply w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors;
+  }
+
+  .select-field {
+    @apply w-full bg-white border border-gray-300 rounded-md px-4 py-2.5 text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors;
+  }
+
+  .stat-card {
+    background: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+    @apply rounded-lg p-6 border border-gray-200 hover:border-blue-300 transition-all duration-200;
+  }
+
+  .page-header {
+    @apply text-2xl font-normal text-gray-800 mb-2;
+  }
+
+  .page-subheader {
+    @apply text-gray-600 mb-8;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-r-full text-gray-600 hover:text-blue-700 hover:bg-blue-50/50 transition-colors text-sm font-medium mr-4;
+  }
+
+  .nav-link-active {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-r-full text-blue-700 bg-blue-100 text-sm font-medium mr-4;
+  }
+}
+
+/* Gradient text */
+.gradient-text {
+  color: #1a73e8;
+}
+
+/* Subtle grid background */
+.grid-bg {
+  background-color: #f8f9fa;
+}
+
+/* Animated glow */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(20, 184, 166, 0.1); }
+  50% { box-shadow: 0 0 40px rgba(20, 184, 166, 0.3); }
+}
+
+.glow-teal {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Status timeline */
+.timeline-step-active {
+  @apply bg-blue-600 text-white border-blue-600;
+}
+
+.timeline-step-done {
+  @apply bg-blue-600 text-white border-blue-600;
+}
+
+.timeline-step-pending {
+  @apply bg-white text-gray-500 border-gray-300;
+}
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Bounce in */
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { opacity: 1; transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.animate-bounceIn {
+  animation: bounceIn 0.6s ease-out;
+}
+
+/* Moving bus pulse */
+@keyframes bus-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.bus-icon-pulse {
+  animation: bus-pulse 1.5s ease-in-out infinite;
+}

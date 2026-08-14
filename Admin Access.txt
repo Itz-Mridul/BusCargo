@@ -1,0 +1,20 @@
+===================================================
+ BUSCARGO - ADMINISTRATOR ACCESS CREDENTIALS
+===================================================
+
+IMPORTANT: Keep this file secure. Do not share it with regular users.
+Only the credentials below have the required authorization to access 
+the Backend Administrative Dashboard and manage the ledger.
+
+Regular users who sign up via the platform are assigned the 'SENDER' 
+role and cannot access administrative tools.
+
+---------------------------------------------------
+ADMIN LOGIN PORTAL: http://localhost:5173/login
+---------------------------------------------------
+Admin Email:    admin@buscargo.com
+Admin Password: password123
+---------------------------------------------------
+
+Once logged in with these credentials, the system will automatically 
+route you to the secure Admin Dashboard and Ledger views.
