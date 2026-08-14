@@ -47,8 +47,11 @@ function AppRoutes() {
         {/* STAFF Routes */}
         <Route element={<ProtectedRoute role="STAFF" />}>
           <Route path="/staff" element={<StaffDashboard />} />
-          <Route path="/staff/scan" element={<ScanPage />} />
         </Route>
+
+        {/* Shared Scan Page - accessible to STAFF and from demo */}
+        <Route path="/staff/scan" element={<ScanPage />} />
+        <Route path="/scan" element={<ScanPage />} />
 
         {/* ADMIN Routes */}
         <Route element={<ProtectedRoute role="ADMIN" />}>

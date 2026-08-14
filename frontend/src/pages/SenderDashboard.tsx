@@ -44,7 +44,7 @@ export const SenderDashboard = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { icon: <Package className="w-6 h-6 text-blue-600" />, title: 'Book', desc: 'Select route & weight', color: 'bg-blue-50 border-blue-100', action: () => navigate('/sender/book') },
-            { icon: <MapPin className="w-6 h-6 text-orange-500" />, title: 'Drop Off', desc: 'Hand parcel at depot', color: 'bg-orange-50 border-orange-100', action: () => navigate('/staff/scan') },
+            { icon: <MapPin className="w-6 h-6 text-orange-500" />, title: 'Drop Off', desc: 'Hand parcel at depot', color: 'bg-orange-50 border-orange-100', action: () => navigate('/scan') },
             { icon: <Navigation className="w-6 h-6 text-indigo-500" />, title: 'Track', desc: 'Watch it move live', color: 'bg-indigo-50 border-indigo-100', action: () => {
               const id = window.prompt('Enter Tracking ID:');
               if (id) navigate(`/sender/track/${id.trim()}`);
