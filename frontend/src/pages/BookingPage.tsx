@@ -358,34 +358,24 @@ export const BookingPage = () => {
               {paymentStep === 'CARD_ENTRY' && (
                 <div className="space-y-5 animate-fadeIn">
                   <div className="text-center mb-6">
-                    <p className="text-sm text-gray-500 uppercase tracking-wide">Total Amount</p>
+                    <p className="text-sm text-gray-500 uppercase tracking-wide">Amount to Pay</p>
                     <p className="text-4xl font-bold text-gray-900 mt-1">₹{total}</p>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+                    <Shield className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Card Number</label>
-                      <div className="relative">
-                        <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                        <input type="text" placeholder="4111 1111 1111 1111" className="input-field pl-10 border-gray-200 text-gray-900 bg-white" defaultValue="4111 1111 1111 1111" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Expiry</label>
-                        <input type="text" placeholder="12/28" className="input-field border-gray-200 text-gray-900 bg-white" defaultValue="12/28" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">CVV</label>
-                        <input type="password" placeholder="123" className="input-field border-gray-200 text-gray-900 bg-white" defaultValue="123" />
-                      </div>
+                      <h4 className="font-semibold text-blue-900 text-sm">Pay by Cash at Depot</h4>
+                      <p className="text-xs text-blue-800 mt-1">
+                        You can drop off your parcel and pay the amount directly in cash to the depot staff.
+                      </p>
                     </div>
                   </div>
 
                   <button 
                     onClick={processPayment}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-blue-500/30 mt-6 flex items-center justify-center gap-2">
-                    Pay ₹{total} Securely
+                    Confirm Cash Booking
                   </button>
                 </div>
               )}
@@ -403,7 +393,7 @@ export const BookingPage = () => {
                   <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
                     <CheckCircle2 className="w-8 h-8 text-emerald-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900">Payment Successful!</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Booking Confirmed!</h3>
                   <p className="text-sm text-gray-500 mt-2">Generating your booking receipt...</p>
                 </div>
               )}

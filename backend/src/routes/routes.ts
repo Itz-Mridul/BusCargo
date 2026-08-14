@@ -32,11 +32,20 @@ router.get('/', async (req, res) => {
     let candidates = allRoutes;
 
     if (originDepotId && destDepotId) {
-      candidates = allRoutes.filter(route => {
-        const originIndex = route.stops.findIndex(s => s.depotId === originDepotId);
-        const destIndex = route.stops.findIndex(s => s.depotId === destDepotId);
-        return originIndex !== -1 && destIndex !== -1 && originIndex < destIndex;
-      });
+      const originDepot = await prisma.depot.findUnique({ where: { id: originDepotId as string } });
+      const destDepot = await prisma.depot.findUnique({ where: { id: destDepotId as string } });
+      
+      if (originDepot && destDepot) {
+        candidates = allRoutes.filter(route => {
+          if (route.type === 'LOCAL') {
+             return route.sourceCityId === originDepot.cityId;
+          } else {
+             const originIndex = route.stops.findIndex(s => s.depot.cityId === originDepot.cityId);
+             const destIndex = route.stops.findIndex(s => s.depot.cityId === destDepot.cityId);
+             return originIndex !== -1 && destIndex !== -1 && originIndex <= destIndex;
+          }
+        });
+      }
     }
 
     // Scoring stage
