@@ -1,15 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bus, Lock, Mail, ChevronRight } from 'lucide-react';
+import { Bus, Lock, Mail, ArrowRight, Package, MapPin, Shield, Zap } from 'lucide-react';
+
+const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
+  id: i,
+  size: Math.random() * 6 + 3,
+  left: Math.random() * 100,
+  duration: Math.random() * 12 + 8,
+  delay: Math.random() * 8,
+  opacity: Math.random() * 0.4 + 0.1,
+}));
+
+const FEATURES = [
+  { icon: Package, label: 'Parcel Tracking', desc: 'Real-time GPS tracking on every route' },
+  { icon: Shield, label: 'OTP Secured', desc: '6-digit OTP + digital signature on delivery' },
+  { icon: Zap, label: 'Instant Booking', desc: 'Book in under 2 minutes, drop off anytime' },
+  { icon: MapPin, label: 'Pune District', desc: 'Serving 302K+ people across 79 villages' },
+];
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [mounted, setMounted]   = useState(false);
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+
+  useEffect(() => { setMounted(true); }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,92 +45,170 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      {/* Background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-100 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen relative flex overflow-hidden bg-slate-950">
 
-      <div className="relative z-10 w-full max-w-md animate-fadeInUp">
+      {/* Floating particles */}
+      {PARTICLES.map(p => (
+        <div
+          key={p.id}
+          className="absolute rounded-full bg-blue-400 pointer-events-none particle"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: `${p.left}%`,
+            bottom: '-20px',
+            opacity: p.opacity,
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+
+      {/* Glowing orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[140px] opacity-20 animate-orb-spin pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600 rounded-full filter blur-[120px] opacity-15 pointer-events-none" style={{ animation: 'orb-spin 25s linear infinite reverse' }} />
+      <div className="absolute top-3/4 left-1/2 w-60 h-60 bg-emerald-500 rounded-full filter blur-[100px] opacity-10 pointer-events-none" />
+
+      {/* Left panel — branding */}
+      <div className={`hidden lg:flex flex-col justify-between w-1/2 p-12 relative z-10 transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+        
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-500/30 mb-4">
-            <Bus className="w-8 h-8 text-white" />
+        <div className="animate-fadeInDown">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-2xl glow-blue">
+              <Bus className="w-7 h-7 text-white" />
+            </div>
+            <span className="text-white font-extrabold text-2xl tracking-tight">BusCargo</span>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-1">BusCargo</h1>
-          <p className="text-sm text-gray-500">Smart parcel logistics on MSRTC routes</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-2xl">
-          <div className="mb-6">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
-              <p className="text-sm text-gray-500 mt-0.5">Welcome back</p>
+        {/* Hero copy */}
+        <div className="space-y-8">
+          <div className="animate-slideInLeft">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-6">
+              <span className="w-2 h-2 bg-blue-400 rounded-full animate-ping" /> Live in Pune District
             </div>
-          </div>
-
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="email"
-                    id="login-email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="input-field pl-10"
-                    required
-                    autoComplete="email"
-                  />
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input
-                    type="password"
-                    id="login-password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="input-field pl-10"
-                    required
-                    autoComplete="current-password"
-                  />
-                </div>
-
-
-            <button
-              type="submit"
-              id="login-submit"
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>Sign In <ChevronRight className="w-4 h-4" /></>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-            <p className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-600 hover:underline font-medium">
-                Sign up free
-              </Link>
+            <h1 className="text-5xl font-black text-white leading-tight">
+              Deliver smarter<br/>
+              <span className="gradient-text-blue-green">with every bus.</span>
+            </h1>
+            <p className="text-slate-400 text-lg mt-4 leading-relaxed max-w-md">
+              BusCargo piggybacks parcels on MSRTC buses — the most affordable, eco-friendly cargo network in Maharashtra.
             </p>
           </div>
+
+          {/* Feature cards with 3D hover */}
+          <div className="grid grid-cols-2 gap-4">
+            {FEATURES.map((f, i) => (
+              <div
+                key={i}
+                className={`card-3d bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm stagger-${i + 1}`}
+              >
+                <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
+                  <f.icon className="w-5 h-5 text-blue-400" />
+                </div>
+                <p className="text-white font-semibold text-sm">{f.label}</p>
+                <p className="text-slate-400 text-xs mt-1">{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Footer stat */}
-        <p className="text-center text-xs text-slate-500 mt-6">
-          Serving 302,452 people across 79 villages · Maharashtra, India
+        {/* Bottom stat */}
+        <p className="text-slate-600 text-sm animate-fadeInUp">
+          Trusted by 302,452 people · Pune, Maharashtra
         </p>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex flex-1 items-center justify-center p-6 relative z-10">
+        <div className={`w-full max-w-md transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+
+          {/* Mobile logo */}
+          <div className="flex lg:hidden items-center justify-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center glow-blue">
+              <Bus className="w-7 h-7 text-white" />
+            </div>
+            <span className="text-white font-extrabold text-2xl">BusCargo</span>
+          </div>
+
+          {/* Glass card */}
+          <div className="relative bg-white/8 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-[0_8px_60px_rgba(0,0,0,0.5)]">
+            
+            {/* Subtle shimmer on card top */}
+            <div className="absolute inset-x-0 top-0 h-px rounded-t-3xl overflow-hidden">
+              <div className="h-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-3xl font-black text-white tracking-tight">Sign in</h2>
+              <p className="text-slate-400 mt-1 text-sm">Welcome back — let's get your parcels moving.</p>
+            </div>
+
+            {error && (
+              <div className="mb-5 p-3.5 bg-red-500/15 border border-red-500/30 rounded-xl text-red-300 text-sm flex items-center gap-2 animate-fadeInDown">
+                <span className="w-2 h-2 bg-red-400 rounded-full shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                <input
+                  type="email"
+                  id="login-email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3.5 pl-11 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:bg-white/12 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                />
+              </div>
+
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-blue-400 transition-colors" />
+                <input
+                  type="password"
+                  id="login-password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                  className="w-full bg-white/8 border border-white/15 rounded-xl px-4 py-3.5 pl-11 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500/60 focus:bg-white/12 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                id="login-submit"
+                disabled={loading}
+                className="relative w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_50px_rgba(37,99,235,0.6)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                {loading ? (
+                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span className="relative z-10">Sign In</span>
+                    <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="mt-8 pt-6 border-t border-white/10 text-center">
+              <p className="text-slate-400 text-sm">
+                New to BusCargo?{' '}
+                <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors hover:underline">
+                  Create free account
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
