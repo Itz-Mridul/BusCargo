@@ -34,17 +34,18 @@ router.get('/', async (req, res) => {
           if (route.type === 'LOCAL') {
             return route.sourceCityId === origin.cityId;
           }
-          const oi = route.stops.findIndex(s => s.depot.cityId === origin.cityId);
-          const di = route.stops.findIndex(s => s.depot.cityId === dest.cityId);
-          return oi !== -1 && di !== -1 && oi <= di;
+          const stopDepotIds = route.stops.map(s => s.depotId);
+          const oi = stopDepotIds.indexOf(origin.id);
+          const di = stopDepotIds.indexOf(dest.id);
+          if (oi !== -1 && di !== -1 && oi <= di) return true;
+          const oiByCityId = route.stops.findIndex(s => s.depot.cityId === origin.cityId);
+          const diByCityId = route.stops.findIndex(s => s.depot.cityId === dest.cityId);
+          return oiByCityId !== -1 && diByCityId !== -1 && oiByCityId <= diByCityId;
         });
       }
     }
 
-    const scored = candidates.map(route => {
-      const score = (0.4 * Math.random()) + (0.3 * Math.random()) + (0.2 * Math.random()) + (0.1 * Math.random());
-      return { ...route, score };
-    }).sort((a, b) => b.score - a.score);
+    const scored = candidates.map((route, i) => ({ ...route, score: candidates.length - i })).sort((a, b) => b.score - a.score);
 
     res.json(scored);
   } catch (err) {

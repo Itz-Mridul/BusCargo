@@ -233,13 +233,12 @@ export const BookingPage = () => {
                     <p className="text-sm text-red-500 font-medium">No {scope} route available between these depots. Try selecting depots from different cities or use a different service type.</p>
                   ) : (
                     <div className="space-y-2">
-                      {routes.map((r, i) => (
+                      {routes.map((r) => (
                         <label key={r.id} className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${routeId === r.id ? 'border-blue-500 bg-blue-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>
                           <input type="radio" name="route" value={r.id} checked={routeId === r.id} onChange={(e) => setRouteId(e.target.value)} className="text-blue-600 focus:ring-blue-500" />
                           <div className="flex-1">
                             <p className="text-sm font-semibold text-gray-900">{r.name}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">{r.stops?.length} stop(s) • {r.stops?.map((s: any) => s.depot?.city?.name).join(' → ')}</p>
-                            {i === 0 && <p className="text-xs text-blue-600 font-medium mt-0.5">⭐ Best match (Score: {r.score?.toFixed(2)})</p>}
+                            <p className="text-xs text-gray-500 mt-0.5">{r.stops?.length} stop(s) · {r.stops?.map((s: any) => s.depot?.city?.name).join(' → ')}</p>
                           </div>
                         </label>
                       ))}
