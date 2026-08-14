@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { CheckCircle, Package, Navigation, Copy, CheckCheck } from 'lucide-react';
+import { CheckCircle, Package, Navigation, Copy, CheckCheck, ShieldCheck } from 'lucide-react';
 import { trackParcel } from '../lib/api';
 
 export const BookingConfirmPage = () => {
@@ -39,7 +39,12 @@ export const BookingConfirmPage = () => {
       <div className="space-y-4">
         {/* QR Code */}
         <div className="glass-card rounded-xl p-6 border border-slate-700/50 text-center">
-          <p className="text-xs text-slate-500 uppercase tracking-wider mb-4">Scan at Depot</p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <p className="text-xs text-slate-500 uppercase tracking-wider">Scan at Depot</p>
+            <span className="flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+              <ShieldCheck className="w-3 h-3" /> HMAC-Secured
+            </span>
+          </div>
           <div className="inline-block bg-white p-4 rounded-xl shadow-xl">
             <QRCodeSVG value={qrValue} size={180} level="H" />
           </div>

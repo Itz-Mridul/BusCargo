@@ -90,7 +90,8 @@ export const BookingPage = () => {
   const maxWeight = scope === 'INTERCITY' ? 20 : 8;
 
   const weightCharge = weight * perKg;
-  const total = base + weightCharge + platformFee;
+  const insurance = 10; // Capped insurance per parcel (slide requirement)
+  const total = base + weightCharge + platformFee + insurance;
   const transitShare = Math.round(total * 0.6);
   const platformShare = Math.round(total * 0.3);
   const agentShare = Math.round(total * 0.1);
@@ -302,6 +303,12 @@ export const BookingPage = () => {
               <div className="flex justify-between text-slate-300">
                 <span>Platform Fee</span><span>₹{platformFee}</span>
               </div>
+              <div className="flex justify-between text-slate-300">
+                <span className="flex items-center gap-1">
+                  <span className="text-emerald-400 text-xs">🛡️</span> Cargo Insurance
+                </span>
+                <span>₹{insurance}</span>
+              </div>
               <div className="pt-3 border-t border-slate-700 flex justify-between font-bold text-xl text-white">
                 <span>Total</span><span className="text-teal-400">₹{total}</span>
               </div>
@@ -348,26 +355,47 @@ export const BookingPage = () => {
 
             <div className="p-6">
               {paymentStep === 'CARD_ENTRY' && (
-                <div className="space-y-5 animate-fadeIn">
-                  <div className="text-center mb-6">
-                    <p className="text-sm text-gray-500 uppercase tracking-wide">Amount to Pay</p>
+                <div className="space-y-4 animate-fadeIn">
+                  <div className="text-center">
+                    <p className="text-xs text-gray-400 uppercase tracking-wide">Total Amount</p>
                     <p className="text-4xl font-bold text-gray-900 mt-1">₹{total}</p>
+                    <p className="text-xs text-gray-400 mt-1">Incl. ₹10 cargo insurance 🛡️</p>
                   </div>
-                  
-                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
-                    <Shield className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-blue-900 text-sm">Pay by Cash at Depot</h4>
-                      <p className="text-xs text-blue-800 mt-1">
-                        You can drop off your parcel and pay the amount directly in cash to the depot staff.
-                      </p>
+
+                  {/* UPI Option */}
+                  <div className="border-2 border-violet-300 bg-violet-50 rounded-xl p-4">
+                    <p className="text-xs font-bold text-violet-700 uppercase tracking-wide mb-2 flex items-center gap-1">⚡ Pay via UPI / RazorpayX</p>
+                    <div className="flex items-center gap-3">
+                      <div className="bg-white border border-gray-200 rounded-lg p-2">
+                        <svg viewBox="0 0 100 100" className="w-16 h-16">
+                          <rect width="100" height="100" fill="white"/>
+                          {[0,1,2,3,4,5,6].map(r => [0,1,2,3,4,5,6].map(c => {
+                            const on = (r<3&&c<3)||(r<3&&c>3)||(r>3&&c<3)||(r===3&&c===3)||(r===4&&c===4)||(r===2&&c===4);
+                            return on ? <rect key={`${r}${c}`} x={r*13+5} y={c*13+5} width="10" height="10" fill="#5B21B6" rx="1"/> : null;
+                          }))}
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-gray-900">buscargo@razorpay</p>
+                        <p className="text-xs text-gray-500">Scan with any UPI app</p>
+                        <p className="text-xs text-violet-600 font-medium mt-1">BHIM · PhonePe · GPay · Paytm</p>
+                      </div>
                     </div>
                   </div>
 
-                  <button 
+                  {/* Cash option */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-start gap-2">
+                    <Shield className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-blue-900">Or Pay Cash at Depot</p>
+                      <p className="text-xs text-blue-700">Hand over cash to depot staff when you drop off the parcel.</p>
+                    </div>
+                  </div>
+
+                  <button
                     onClick={processPayment}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-blue-500/30 mt-6 flex items-center justify-center gap-2">
-                    Confirm Cash Booking
+                    className="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg">
+                    Confirm Booking →
                   </button>
                 </div>
               )}
