@@ -12,60 +12,61 @@ router.post('/', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, res
 
   try {
     if (!['INTERCITY', 'LOCAL'].includes(serviceType)) {
-      return res.status(400).json({ error: 'Invalid serviceType. Must be INTERCITY or LOCAL.' });
-    }
-    const numericWeight = Number(weight);
-    const maxWeight = serviceType === 'INTERCITY' ? 20 : 8;
-    if (!Number.isFinite(numericWeight) || numericWeight < 0.1 || numericWeight > maxWeight) {
-      return res.status(400).json({ error: `Weight must be between 0.1 and ${maxWeight} kg.` });
-    }
-    if (typeof receiverName !== 'string' || receiverName.trim().length < 2 || receiverName.trim().length > 80 ||
-        typeof receiverPhone !== 'string' || !/^\+?[0-9\s-]{8,20}$/.test(receiverPhone.trim())) {
-      return res.status(400).json({ error: 'Enter a valid receiver name and phone number.' });
+      return res.status(400).json({ error: 'Invalid service type.' });
     }
 
-    const originDepot = await prisma.depot.findUnique({ where: { id: originDepotId } });
-    const destDepot = await prisma.depot.findUnique({ where: { id: destDepotId } });
-
-    if (!originDepot || !destDepot) {
-      return res.status(404).json({ error: 'Depots not found' });
+    const kg = Number(weight);
+    const maxKg = serviceType === 'INTERCITY' ? 20 : 8;
+    if (!Number.isFinite(kg) || kg < 0.1 || kg > maxKg) {
+      return res.status(400).json({ error: `Weight must be between 0.1 and ${maxKg} kg.` });
     }
-    if (originDepotId === destDepotId) return res.status(400).json({ error: 'Origin and destination must be different.' });
+
+    if (typeof receiverName !== 'string' || receiverName.trim().length < 2 || receiverName.trim().length > 80) {
+      return res.status(400).json({ error: 'Enter a valid receiver name.' });
+    }
+
+    if (typeof receiverPhone !== 'string' || !/^\+?[0-9\s-]{8,20}$/.test(receiverPhone.trim())) {
+      return res.status(400).json({ error: 'Enter a valid phone number.' });
+    }
+
+    const origin = await prisma.depot.findUnique({ where: { id: originDepotId } });
+    const dest   = await prisma.depot.findUnique({ where: { id: destDepotId } });
+
+    if (!origin || !dest) return res.status(404).json({ error: 'Depot not found.' });
+    if (originDepotId === destDepotId) return res.status(400).json({ error: 'Origin and destination cannot be the same.' });
 
     const route = await prisma.route.findUnique({
       where: { id: routeId },
       include: { stops: { orderBy: { stopOrder: 'asc' } } }
     });
-    if (!route || route.type !== serviceType) return res.status(400).json({ error: 'Select an available route for this service.' });
-    const originIndex = route.stops.findIndex(stop => stop.depotId === originDepotId);
-    const destinationIndex = route.stops.findIndex(stop => stop.depotId === destDepotId);
-    if (originIndex < 0 || destinationIndex < 0 || originIndex >= destinationIndex) {
-      return res.status(400).json({ error: 'The selected route does not serve this journey in that direction.' });
+
+    if (!route || route.type !== serviceType) return res.status(400).json({ error: 'Invalid route selected.' });
+
+    const oi = route.stops.findIndex(s => s.depotId === originDepotId);
+    const di = route.stops.findIndex(s => s.depotId === destDepotId);
+
+    if (oi < 0 || di < 0 || oi >= di) {
+      return res.status(400).json({ error: 'Route does not serve this journey direction.' });
     }
 
-    if (serviceType === 'LOCAL' && originDepot.cityId !== destDepot.cityId) {
-      return res.status(400).json({ error: 'Local City mode requires both depots to be in the same city.' });
+    if (serviceType === 'LOCAL' && origin.cityId !== dest.cityId) {
+      return res.status(400).json({ error: 'Local mode requires both depots in the same city.' });
     }
 
-    if (serviceType === 'INTERCITY' && originDepot.cityId === destDepot.cityId) {
-      return res.status(400).json({ error: 'Inter-City mode requires depots to be in different cities.' });
+    if (serviceType === 'INTERCITY' && origin.cityId === dest.cityId) {
+      return res.status(400).json({ error: 'Inter-city mode requires depots in different cities.' });
     }
 
-    let price = 0;
-    if (serviceType === 'INTERCITY') {
-      price = 50 + (numericWeight * 15) + 20;
-    } else {
-      price = 25 + (numericWeight * 8) + 10;
-    }
+    const price = serviceType === 'INTERCITY'
+      ? 50 + (kg * 15) + 20 + 10
+      : 25 + (kg * 8) + 10 + 10;
 
     const trackingId = `BC-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${randomInt(100000, 1000000)}`;
     const otp = randomInt(100000, 1000000).toString();
     const otpHash = await bcrypt.hash(otp, 10);
     const qrCode = `BUSCARGO:${trackingId}`;
 
-    const bus = await prisma.bus.findFirst({
-      where: { routeId: route.id, status: 'IDLE' }
-    });
+    const bus = await prisma.bus.findFirst({ where: { routeId: route.id, status: 'IDLE' } });
 
     const parcel = await prisma.parcel.create({
       data: {
@@ -77,28 +78,21 @@ router.post('/', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, res
         serviceType,
         receiverName: receiverName.trim(),
         receiverPhone: receiverPhone.trim(),
-        weight: numericWeight,
+        weight: kg,
         price,
         status: 'BOOKED',
         qrCode,
         otpHash,
         transactions: {
-          create: {
-            amount: price,
-            splitTransitPct: 60,
-            splitPlatformPct: 30,
-            splitAgentPct: 10,
-          }
+          create: { amount: price, splitTransitPct: 60, splitPlatformPct: 30, splitAgentPct: 10 }
         }
       },
-      include: {
-        transactions: true
-      }
+      include: { transactions: true }
     });
 
     res.json({ parcel, qrData: qrCode, otp });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -110,33 +104,30 @@ router.get('/me', authenticate, requireRole(['SENDER', 'ADMIN']), async (req, re
       orderBy: { createdAt: 'desc' }
     });
     res.json(parcels);
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 router.get('/:trackingId/track', async (req, res) => {
   try {
-    const { trackingId } = req.params;
     const parcel = await prisma.parcel.findUnique({
-      where: { trackingId },
+      where: { trackingId: req.params.trackingId },
       include: {
         originDepot: true,
         destDepot: true,
-        bus: {
-          include: { route: true }
-        }
+        bus: { include: { route: true } }
       }
     });
 
     if (!parcel) {
-       res.status(404).json({ error: 'Parcel not found' });
-       return;
+      res.status(404).json({ error: 'Parcel not found' });
+      return;
     }
 
-    const { otpHash, senderId, receiverPhone, ...safeParcel } = parcel;
-    res.json(safeParcel);
-  } catch (error) {
+    const { otpHash, senderId, receiverPhone, ...safe } = parcel;
+    res.json(safe);
+  } catch (err) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });

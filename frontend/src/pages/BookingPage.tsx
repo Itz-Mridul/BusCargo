@@ -227,18 +227,19 @@ export const BookingPage = () => {
               </div>
 
               {origin && destination && (
-                <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                  <label className="block text-xs text-slate-400 mb-2">Suggested Route</label>
+                <div className="p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
+                  <label className="block text-xs text-blue-700 font-semibold uppercase tracking-wide mb-3">🚌 Available Routes</label>
                   {routes.length === 0 ? (
-                    <p className="text-sm text-red-400">No {scope} route available between these points. Try another pair.</p>
+                    <p className="text-sm text-red-500 font-medium">No {scope} route available between these depots. Try selecting depots from different cities or use a different service type.</p>
                   ) : (
                     <div className="space-y-2">
                       {routes.map((r, i) => (
-                        <label key={r.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${routeId === r.id ? 'border-teal-500 bg-teal-500/10' : 'border-slate-700 hover:border-slate-600'}`}>
-                          <input type="radio" name="route" value={r.id} checked={routeId === r.id} onChange={(e) => setRouteId(e.target.value)} className="text-teal-500 focus:ring-teal-500" />
+                        <label key={r.id} className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer transition-all ${routeId === r.id ? 'border-blue-500 bg-blue-100' : 'border-gray-200 bg-white hover:border-blue-300'}`}>
+                          <input type="radio" name="route" value={r.id} checked={routeId === r.id} onChange={(e) => setRouteId(e.target.value)} className="text-blue-600 focus:ring-blue-500" />
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-white">{r.name}</p>
-                            {i === 0 && <p className="text-xs text-teal-400 mt-0.5">Best match (Score: {r.score?.toFixed(2)})</p>}
+                            <p className="text-sm font-semibold text-gray-900">{r.name}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{r.stops?.length} stop(s) • {r.stops?.map((s: any) => s.depot?.city?.name).join(' → ')}</p>
+                            {i === 0 && <p className="text-xs text-blue-600 font-medium mt-0.5">⭐ Best match (Score: {r.score?.toFixed(2)})</p>}
                           </div>
                         </label>
                       ))}
@@ -248,31 +249,31 @@ export const BookingPage = () => {
               )}
 
               <div>
-                <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <User className="w-4 h-4 text-teal-400" /> 3. Parcel & Receiver Details
+                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <User className="w-4 h-4 text-blue-600" /> 3. Parcel & Receiver Details
                 </h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1.5">Weight (kg)</label>
+                    <label className="block text-xs text-gray-500 mb-1.5">Weight (kg)</label>
                     <input type="number" min="0.1" max={maxWeight} step="0.1" value={weight}
                       onChange={e => {
                         let w = Number(e.target.value);
                         if (w > maxWeight) w = maxWeight;
                         setWeight(w);
                       }} required className="input-field" />
-                    <p className="text-xs text-slate-500 mt-1">Max {maxWeight}kg per booking</p>
+                    <p className="text-xs text-gray-400 mt-1">Max {maxWeight}kg per booking</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1.5">Receiver Name</label>
+                    <label className="block text-xs text-gray-500 mb-1.5">Receiver Name</label>
                     <input type="text" value={receiverName} onChange={e => setReceiverName(e.target.value)}
                       placeholder="Full name" required className="input-field" />
                   </div>
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1.5">Receiver Phone</label>
+                    <label className="block text-xs text-gray-500 mb-1.5">Receiver Phone</label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input type="tel" value={receiverPhone} onChange={e => setReceiverPhone(e.target.value)}
                         placeholder="+91 XXXXX XXXXX" required className="input-field pl-10" />
                     </div>

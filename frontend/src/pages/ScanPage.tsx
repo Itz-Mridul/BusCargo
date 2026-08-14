@@ -193,7 +193,7 @@ export const ScanPage = () => {
                 <p className="text-xs text-teal-400">🚌 Bus simulation started — parcel is now moving on the map (sped up ×20 for demo)</p>
                 <div className="flex items-center justify-between bg-teal-500/10 rounded-md px-3 py-2">
                   <span className="text-xs text-teal-300 font-medium">Cargo Slot Assigned</span>
-                  <span className="font-mono font-bold text-teal-400 text-sm">SLOT-{Math.abs(result.parcel.trackingId?.charCodeAt(4) ?? 0) % 12 + 1:0>2}B</span>
+                  <span className="font-mono font-bold text-teal-400 text-sm">SLOT-{String((Math.abs(result.parcel.trackingId?.charCodeAt(4) ?? 0) % 12) + 1).padStart(2, '0')}B</span>
                 </div>
               </div>
             )}
