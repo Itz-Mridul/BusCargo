@@ -10,7 +10,22 @@
 
 ## 🧭 What is BusCargo?
 
-BusCargo is a **hackathon prototype** built for Sanjivani University's AMO NeXus challenge. It demonstrates how existing Maharashtra State Road Transport Corporation (MSRTC) buses — which already travel fixed routes every day — can carry parcels as cargo in their unused luggage space, without adding a single new vehicle.
+BusCargo turns the idle cargo compartments of Maharashtra State Road Transport Corporation (MSRTC) passenger buses into a state-wide logistics network. By piggybacking on existing bus routes and schedules, we dramatically lower delivery costs and extend reach deep into rural and semi-urban areas without adding a single new vehicle to the road.
+
+## 📸 Platform Previews
+
+<div align="center">
+  <img src="./docs/screenshots/dashboard.png" width="800" alt="Sender Dashboard" />
+  <p><i>Sender Dashboard: Live tracking, fast booking, and pilot status metrics</i></p>
+  
+  <img src="./docs/screenshots/booking.png" width="800" alt="Booking Flow" />
+  <p><i>Booking Flow: Seamless MSRTC route matching between depots</i></p>
+  
+  <img src="./docs/screenshots/scan.png" width="800" alt="Staff Scanning Interface" />
+  <p><i>Staff Interface: 1-click QR scanning and slot allocation</i></p>
+</div>
+
+---
 
 This isn't live in production yet. It's a fully functional pilot-ready prototype aimed at Pune district.
 
