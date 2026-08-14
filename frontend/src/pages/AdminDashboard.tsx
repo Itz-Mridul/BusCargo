@@ -40,7 +40,7 @@ export const AdminDashboard = () => {
         <p className="page-subheader">BusCargo pilot route — Kopargaon · Shirdi · Ahmednagar</p>
       </div>
 
-      {/* Metrics */}
+      
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => (
@@ -69,7 +69,7 @@ export const AdminDashboard = () => {
         })}
       </div>
 
-      {/* Route Info */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div className="glass-card rounded-xl p-6 border border-gray-200">
           <h3 className="font-semibold mb-4 text-gray-800">🗺️ Active Route</h3>
@@ -117,7 +117,7 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Quick actions */}
+      
       <div className="glass-card rounded-xl p-6 border border-gray-200">
         <h3 className="font-semibold mb-4 text-gray-800">Quick Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -143,7 +143,7 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Users List */}
+      
       <div className="glass-card rounded-xl p-6 border border-gray-200 mt-6">
         <h3 className="font-semibold mb-4 text-gray-800 flex items-center gap-2">
           <User className="w-5 h-5 text-blue-600" /> Registered Clients & Users

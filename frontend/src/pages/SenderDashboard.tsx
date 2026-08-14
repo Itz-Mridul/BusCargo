@@ -56,7 +56,7 @@ export const SenderDashboard = () => {
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-12 animate-fadeInUp">
 
-      {/* ── HERO BANNER ── */}
+      
       <div className="relative overflow-hidden rounded-[2rem] bg-slate-900 p-8 md:p-12 shadow-2xl">
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-96 h-96 bg-blue-500 rounded-full mix-blend-screen filter blur-[80px] opacity-60 animate-pulse" />
         <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-96 h-96 bg-emerald-500 rounded-full mix-blend-screen filter blur-[80px] opacity-40" />
@@ -99,7 +99,7 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* ── IMPACT STATS BAR ── */}
+      
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { value: '302K+', label: 'Target Reach (Kopargaon region)', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', isTarget: true },
@@ -116,7 +116,7 @@ export const SenderDashboard = () => {
         ))}
       </div>
 
-      {/* ── 6-STEP DELIVERY FLOW ── */}
+      
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -150,7 +150,7 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* ── IMPACT PILLARS ── */}
+      
       <div className="relative rounded-[2rem] bg-slate-900 p-8 md:p-10 overflow-hidden">
         <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-600 rounded-full filter blur-[100px] opacity-20 pointer-events-none" />
         <div className="relative z-10">
@@ -176,7 +176,7 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* ── TECH FEATURES ── */}
+      
       <div>
         <div className="mb-6">
           <h3 className="text-2xl font-bold text-slate-800">Security & Technology</h3>
@@ -197,7 +197,7 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* ── PILOT CORRIDOR BANNER ── */}
+      
       <div className="relative overflow-hidden rounded-2xl border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
@@ -216,7 +216,7 @@ export const SenderDashboard = () => {
         </div>
       </div>
 
-      {/* ── RECENT BOOKINGS ── */}
+      
       <div>
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-2xl font-bold text-slate-800">Recent Bookings</h3>
@@ -266,7 +266,7 @@ export const SenderDashboard = () => {
         )}
       </div>
 
-      {/* ── MARKET SIZE FOOTER ── */}
+      
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 text-white flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
           <p className="text-slate-400 text-xs uppercase tracking-wider font-semibold mb-1">India Express Parcel Market</p>

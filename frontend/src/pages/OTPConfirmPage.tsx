@@ -12,13 +12,13 @@ export const OTPConfirmPage = () => {
   const [lookupLoading, setLookupLoading] = useState(false);
   const [step, setStep] = useState<'LOOKUP' | 'SIGN' | 'OTP'>('LOOKUP');
 
-  // Signature canvas
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawing = useRef(false);
   const [hasSigned, setHasSigned] = useState(false);
   const [signatureData, setSignatureData] = useState('');
 
-  // Fetch parcel info once tracking ID is entered
+  
   const lookupParcel = async () => {
     if (!trackingId.trim()) return;
     setLookupLoading(true);
@@ -34,7 +34,7 @@ export const OTPConfirmPage = () => {
     }
   };
 
-  // Canvas drawing
+  
   const getPos = (e: React.MouseEvent | React.TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
     if ('touches' in e) {
@@ -148,7 +148,7 @@ export const OTPConfirmPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
       <div className="relative z-10 w-full max-w-lg animate-fadeInUp">
-        {/* Header */}
+        
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-500/30 mb-4">
             <KeyRound className="w-8 h-8 text-white" />
@@ -157,7 +157,7 @@ export const OTPConfirmPage = () => {
           <p className="text-gray-500 text-sm">Parcel handover with digital proof</p>
         </div>
 
-        {/* Progress steps */}
+        
         <div className="flex items-center justify-center gap-2 mb-6">
           {['Lookup', 'Signature', 'OTP'].map((label, i) => {
             const active = (step === 'LOOKUP' && i === 0) || (step === 'SIGN' && i === 1) || (step === 'OTP' && i === 2);
@@ -183,7 +183,7 @@ export const OTPConfirmPage = () => {
             </div>
           )}
 
-          {/* Step 1: Lookup */}
+          
           {step === 'LOOKUP' && (
             <div className="space-y-4">
               <div>
@@ -207,10 +207,10 @@ export const OTPConfirmPage = () => {
             </div>
           )}
 
-          {/* Step 2: Parcel Info + Digital Signature */}
+          
           {step === 'SIGN' && parcelInfo && (
             <div className="space-y-4">
-              {/* Parcel Info Card */}
+              
               <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 space-y-2">
                 <p className="text-xs text-blue-600 font-semibold uppercase tracking-wider mb-2">Parcel Details</p>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
@@ -227,7 +227,7 @@ export const OTPConfirmPage = () => {
                 </div>
               </div>
 
-              {/* Digital Signature */}
+              
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-gray-700 flex items-center gap-1.5">
@@ -265,10 +265,10 @@ export const OTPConfirmPage = () => {
             </div>
           )}
 
-          {/* Step 3: OTP */}
+          
           {step === 'OTP' && (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Signature preview */}
+              
               {signatureData && (
                 <div className="border border-gray-100 rounded-xl p-3 bg-gray-50 text-center">
                   <p className="text-xs text-gray-400 mb-2">Signature Captured ✓</p>

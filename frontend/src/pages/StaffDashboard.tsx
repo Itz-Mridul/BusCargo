@@ -14,7 +14,7 @@ export const StaffDashboard = () => {
         </Link>
       </div>
 
-      {/* Action cards */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <Link to="/staff/scan" className="stat-card group cursor-pointer block bg-white">
           <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -39,7 +39,7 @@ export const StaffDashboard = () => {
         </Link>
       </div>
 
-      {/* Process guide */}
+      
       <div className="glass-card rounded-xl p-6 border border-gray-200 bg-white">
         <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Clock className="w-4 h-4 text-blue-600" /> Staff Process Guide

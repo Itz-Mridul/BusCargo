@@ -5,7 +5,6 @@ import { stopSimulation } from '../services/busSimulator';
 
 const router = Router();
 
-// Public endpoint — receiver enters OTP, no auth needed
 router.post('/confirm', async (req, res) => {
   const { trackingId, otp } = req.body;
 
@@ -21,7 +20,7 @@ router.post('/confirm', async (req, res) => {
       return;
     }
 
-    // Allow OTP for ARRIVED or IN_TRANSIT (flexible for demo)
+    
     if (!['ARRIVED', 'IN_TRANSIT'].includes(parcel.status)) {
       res.status(400).json({ error: `Cannot confirm delivery for parcel with status: ${parcel.status}` });
       return;

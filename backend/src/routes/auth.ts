@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
        return;
     }
 
-    // Track login metrics
+    
     await prisma.user.update({
       where: { id: user.id },
       data: {

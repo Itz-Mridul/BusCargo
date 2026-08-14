@@ -47,7 +47,7 @@ export const LoginPage = () => {
   return (
     <div className="min-h-screen relative flex overflow-hidden bg-slate-950">
 
-      {/* Floating particles */}
+      
       {PARTICLES.map(p => (
         <div
           key={p.id}
@@ -64,15 +64,15 @@ export const LoginPage = () => {
         />
       ))}
 
-      {/* Glowing orbs */}
+      
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full filter blur-[140px] opacity-20 animate-orb-spin pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600 rounded-full filter blur-[120px] opacity-15 pointer-events-none" style={{ animation: 'orb-spin 25s linear infinite reverse' }} />
       <div className="absolute top-3/4 left-1/2 w-60 h-60 bg-emerald-500 rounded-full filter blur-[100px] opacity-10 pointer-events-none" />
 
-      {/* Left panel — branding */}
+      
       <div className={`hidden lg:flex flex-col justify-between w-1/2 p-12 relative z-10 transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
         
-        {/* Logo */}
+        
         <div className="animate-fadeInDown">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center shadow-2xl glow-blue">
@@ -82,7 +82,7 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        {/* Hero copy */}
+        
         <div className="space-y-8">
           <div className="animate-slideInLeft">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-6">
@@ -97,7 +97,7 @@ export const LoginPage = () => {
             </p>
           </div>
 
-          {/* Feature cards with 3D hover */}
+          
           <div className="grid grid-cols-2 gap-4">
             {FEATURES.map((f, i) => (
               <div
@@ -114,17 +114,17 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        {/* Bottom stat */}
+        
         <p className="text-center text-xs text-slate-500 mt-6">
           Pilot Phase · Pune District, Maharashtra
         </p>
       </div>
 
-      {/* Right panel — form */}
+      
       <div className="flex flex-1 items-center justify-center p-6 relative z-10">
         <div className={`w-full max-w-md transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
 
-          {/* Mobile logo */}
+          
           <div className="flex lg:hidden items-center justify-center gap-3 mb-8">
             <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center glow-blue">
               <Bus className="w-7 h-7 text-white" />
@@ -132,10 +132,10 @@ export const LoginPage = () => {
             <span className="text-white font-extrabold text-2xl">BusCargo</span>
           </div>
 
-          {/* Glass card */}
+          
           <div className="relative bg-white/8 backdrop-blur-2xl border border-white/15 rounded-3xl p-8 shadow-[0_8px_60px_rgba(0,0,0,0.5)]">
             
-            {/* Subtle shimmer on card top */}
+            
             <div className="absolute inset-x-0 top-0 h-px rounded-t-3xl overflow-hidden">
               <div className="h-full animate-shimmer bg-gradient-to-r from-transparent via-white/40 to-transparent" />
             </div>

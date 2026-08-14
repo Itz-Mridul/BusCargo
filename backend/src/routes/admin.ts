@@ -4,7 +4,6 @@ import { authenticate, requireRole } from '../middleware/auth';
 
 const router = Router();
 
-// GET /api/admin/users — admin only, returns all users with login metadata
 router.get('/users', authenticate, requireRole(['ADMIN']), async (req, res) => {
   try {
     const users = await prisma.user.findMany({

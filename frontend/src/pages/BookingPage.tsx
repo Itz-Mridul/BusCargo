@@ -7,7 +7,7 @@ export const BookingPage = () => {
   const [scope, setScope] = useState<'INTERCITY' | 'LOCAL'>('INTERCITY');
   const [cities, setCities] = useState<any[]>([]);
   
-  // Selections
+  
   const [originCityId, setOriginCityId] = useState('');
   const [destCityId, setDestCityId] = useState('');
   
@@ -26,7 +26,7 @@ export const BookingPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Payment Modal state
+  
   const [showPayment, setShowPayment] = useState(false);
   const [paymentStep, setPaymentStep] = useState<'CARD_ENTRY' | 'PROCESSING' | 'SUCCESS'>('CARD_ENTRY');
 
@@ -36,7 +36,7 @@ export const BookingPage = () => {
     getCities().then(res => setCities(res.data)).catch(console.error);
   }, []);
 
-  // When scope changes, reset everything
+  
   useEffect(() => {
     setOriginCityId('');
     setDestCityId('');
@@ -46,14 +46,14 @@ export const BookingPage = () => {
     setRouteId('');
   }, [scope]);
 
-  // If local, keep destCity in sync with originCity
+  
   useEffect(() => {
     if (scope === 'LOCAL') {
       setDestCityId(originCityId);
     }
   }, [originCityId, scope]);
 
-  // Fetch Depots when cities change
+  
   useEffect(() => {
     setOrigin('');
     setOriginDepots([]);
@@ -70,7 +70,7 @@ export const BookingPage = () => {
     }
   }, [destCityId, scope]);
 
-  // Fetch routes when depots are selected
+  
   useEffect(() => {
     setRoutes([]);
     setRouteId('');
@@ -78,19 +78,19 @@ export const BookingPage = () => {
       api.get(`/routes?type=${scope}&originDepotId=${origin}&destDepotId=${destination}`)
         .then(res => {
           setRoutes(res.data);
-          if (res.data.length > 0) setRouteId(res.data[0].id); // Auto-select top scored route
+          if (res.data.length > 0) setRouteId(res.data[0].id); 
         }).catch(console.error);
     }
   }, [origin, destination, scope]);
 
-  // Pricing logic
+  
   const base = scope === 'INTERCITY' ? 50 : 25;
   const perKg = scope === 'INTERCITY' ? 15 : 8;
   const platformFee = scope === 'INTERCITY' ? 20 : 10;
   const maxWeight = scope === 'INTERCITY' ? 20 : 8;
 
   const weightCharge = weight * perKg;
-  const insurance = 10; // Capped insurance per parcel (slide requirement)
+  const insurance = 10; 
   const total = base + weightCharge + platformFee + insurance;
   const transitShare = Math.round(total * 0.6);
   const platformShare = Math.round(total * 0.3);
@@ -106,11 +106,11 @@ export const BookingPage = () => {
   const processPayment = async () => {
     setPaymentStep('PROCESSING');
     
-    // Simulate network delay for payment processing
+    
     await new Promise(r => setTimeout(r, 2000));
     setPaymentStep('SUCCESS');
     
-    // Briefly show success before calling API
+    
     await new Promise(r => setTimeout(r, 1000));
     setLoading(true);
     setError('');
@@ -336,12 +336,12 @@ export const BookingPage = () => {
         </div>
       </div>
 
-      {/* Payment Gateway Modal */}
+      
       {showPayment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col relative animate-bounceIn">
             
-            {/* Header */}
+            
             <div className="bg-gray-50 border-b border-gray-100 p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-emerald-500" />
@@ -363,7 +363,7 @@ export const BookingPage = () => {
                     <p className="text-xs text-gray-400 mt-1">Incl. ₹10 cargo insurance 🛡️</p>
                   </div>
 
-                  {/* UPI Option */}
+                  
                   <div className="border-2 border-violet-300 bg-violet-50 rounded-xl p-4">
                     <p className="text-xs font-bold text-violet-700 uppercase tracking-wide mb-2 flex items-center gap-1">⚡ Pay via UPI / RazorpayX</p>
                     <div className="flex items-center gap-3">
@@ -384,7 +384,7 @@ export const BookingPage = () => {
                     </div>
                   </div>
 
-                  {/* Cash option */}
+                  
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-start gap-2">
                     <Shield className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>

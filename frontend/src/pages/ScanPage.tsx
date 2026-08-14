@@ -10,7 +10,7 @@ export const ScanPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // Handover state
+  
   const [handoverOtp, setHandoverOtp] = useState('');
   const [handoverLoading, setHandoverLoading] = useState(false);
   const [handoverSuccess, setHandoverSuccess] = useState(false);
@@ -101,7 +101,7 @@ export const ScanPage = () => {
         <p className="page-subheader">Scan at origin depot to load, destination depot to unload</p>
       </div>
 
-      {/* Mode Toggle */}
+      
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => { setMode('camera'); reset(); }}
@@ -115,14 +115,14 @@ export const ScanPage = () => {
         </button>
       </div>
 
-      {/* Camera Scanner */}
+      
       {mode === 'camera' && !result && (
         <div className="glass-card rounded-xl border border-slate-700/50 overflow-hidden mb-4">
           <div id="qr-reader" className="w-full" />
         </div>
       )}
 
-      {/* Manual Entry */}
+      
       {mode === 'manual' && !result && (
         <div className="glass-card rounded-xl p-6 border border-slate-700/50 mb-4">
           <form onSubmit={handleManualSubmit} className="space-y-4">
@@ -146,7 +146,7 @@ export const ScanPage = () => {
         </div>
       )}
 
-      {/* Loading */}
+      
       {loading && (
         <div className="text-center py-8">
           <Loader className="w-8 h-8 text-teal-400 animate-spin mx-auto mb-3" />
@@ -154,7 +154,7 @@ export const ScanPage = () => {
         </div>
       )}
 
-      {/* Error */}
+      
       {error && (
         <div className="glass-card rounded-xl p-5 border border-red-500/30 bg-red-500/10 animate-fadeInUp">
           <div className="flex items-center gap-3 text-red-400">
@@ -168,7 +168,7 @@ export const ScanPage = () => {
         </div>
       )}
 
-      {/* Success */}
+      
       {result && (
         <div className="glass-card rounded-xl p-6 border border-emerald-500/30 bg-emerald-500/10 animate-fadeInUp">
           <div className="flex items-center gap-3 mb-4">

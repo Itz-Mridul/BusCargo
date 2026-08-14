@@ -60,10 +60,6 @@ body {
   }
 }
 
-/* ============================================
-   ANIMATIONS & KEYFRAMES
-   ============================================ */
-
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -173,7 +169,6 @@ body {
 .stagger-4 { animation: stagger-fade 0.4s 0.4s ease-out both; }
 .stagger-5 { animation: stagger-fade 0.4s 0.5s ease-out both; }
 
-/* 3D card hover effect */
 .card-3d {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   transform-style: preserve-3d;
@@ -183,12 +178,10 @@ body {
   box-shadow: 0 30px 60px -12px rgba(0,0,0,0.18), 0 0 0 1px rgba(37,99,235,0.1);
 }
 
-/* Status timeline */
 .timeline-step-active { @apply bg-blue-600 text-white border-blue-600; }
 .timeline-step-done   { @apply bg-blue-600 text-white border-blue-600; }
 .timeline-step-pending { @apply bg-white text-gray-500 border-gray-300; }
 
-/* Gradient text */
 .gradient-text { color: #1a73e8; }
 .gradient-text-blue-green {
   background: linear-gradient(135deg, #3b82f6, #10b981);

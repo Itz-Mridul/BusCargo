@@ -80,7 +80,7 @@ export const LedgerPage = () => {
         <p className="page-subheader">Zero manual reconciliation — auto-split on delivery confirmation</p>
       </div>
 
-      {/* Search */}
+      
       {!parcelId && (
         <form onSubmit={handleSearch} className="glass-card rounded-xl p-5 border border-slate-700/50 mb-6 flex gap-3">
           <input
@@ -104,7 +104,7 @@ export const LedgerPage = () => {
 
       {ledger && (
         <>
-          {/* Total */}
+          
           <div className="glass-card rounded-xl p-8 border border-teal-500/20 glow-teal mb-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4">
               <span className="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-500/30">
@@ -121,7 +121,7 @@ export const LedgerPage = () => {
             <p className="text-xs text-slate-500 mt-2">Parcel ID: <span className="font-mono text-slate-400">{ledger.parcelId}</span></p>
           </div>
 
-          {/* Splits */}
+          
           <div className="space-y-3 mb-6">
             {splits.map((s) => {
               const Icon = s.icon;

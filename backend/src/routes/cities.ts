@@ -3,7 +3,6 @@ import prisma from '../lib/prisma';
 
 const router = Router();
 
-// Get all cities
 router.get('/', async (req, res) => {
   try {
     const cities = await prisma.city.findMany({

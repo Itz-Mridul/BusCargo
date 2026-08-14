@@ -62,5 +62,4 @@ app.listen(PORT, async () => {
   }
 });
 
-// Force event loop to stay alive
 setInterval(() => {}, 1000 * 60 * 60);

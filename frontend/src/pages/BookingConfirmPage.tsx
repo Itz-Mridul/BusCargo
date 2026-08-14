@@ -9,7 +9,7 @@ export const BookingConfirmPage = () => {
   const [parcel, setParcel] = useState<any>(null);
   const [copied, setCopied] = useState(false);
 
-  // OTP & QR were stored at booking time
+  
   const otp = trackingId ? sessionStorage.getItem(`otp_${trackingId}`) : null;
   const qrValue = trackingId ? (sessionStorage.getItem(`qr_${trackingId}`) || `BUSCARGO:${trackingId}`) : `BUSCARGO:${trackingId}`;
 
@@ -27,7 +27,7 @@ export const BookingConfirmPage = () => {
 
   return (
     <div className="p-8 max-w-2xl mx-auto animate-fadeInUp">
-      {/* Success Header */}
+      
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/30 mb-4 animate-bounceIn">
           <CheckCircle className="w-10 h-10 text-emerald-400" />
@@ -37,7 +37,7 @@ export const BookingConfirmPage = () => {
       </div>
 
       <div className="space-y-4">
-        {/* QR Code */}
+        
         <div className="glass-card rounded-xl p-6 border border-slate-700/50 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <p className="text-xs text-slate-500 uppercase tracking-wider">Scan at Depot</p>
@@ -51,7 +51,7 @@ export const BookingConfirmPage = () => {
           <p className="text-xs text-slate-500 mt-3 font-mono">{qrValue}</p>
         </div>
 
-        {/* Tracking ID */}
+        
         <div className="glass-card rounded-xl p-5 border border-teal-500/20 bg-teal-500/5">
           <div className="flex items-center justify-between">
             <div>
@@ -64,7 +64,7 @@ export const BookingConfirmPage = () => {
           </div>
         </div>
 
-        {/* OTP */}
+        
         {otp && (
           <div className="glass-card rounded-xl p-5 border border-dashed border-amber-500/40 bg-amber-500/5">
             <p className="text-xs text-amber-400 uppercase tracking-wider mb-2 font-semibold">⚠️ Receiver Delivery OTP</p>
@@ -74,7 +74,7 @@ export const BookingConfirmPage = () => {
           </div>
         )}
 
-        {/* Parcel Summary */}
+        
         {parcel && (
           <div className="glass-card rounded-xl p-5 border border-slate-700/50">
             <p className="text-xs text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -91,7 +91,7 @@ export const BookingConfirmPage = () => {
           </div>
         )}
 
-        {/* Actions */}
+        
         <div className="grid grid-cols-2 gap-3">
           <Link to={`/sender/track/${trackingId}`}
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white font-semibold py-3 rounded-lg transition-all text-sm">

@@ -8,7 +8,6 @@ import { StatusBadge } from '../components/StatusBadge';
 import { Navigation, PhoneCall, ShieldAlert, QrCode } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
-// Fix leaflet default icon
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -36,8 +35,6 @@ const depotIcon = new L.DivIcon({
   iconSize: [24, 24],
   iconAnchor: [12, 24],
 });
-
-// Dynamic coordinates computed from parcel data in component
 
 const STATUSES = ['BOOKED', 'IN_TRANSIT', 'ARRIVED', 'DELIVERED'];
 
@@ -69,7 +66,7 @@ export const TrackingPage = () => {
     }
   }, [parcel]);
 
-  // Also poll parcel status every 5s
+  
   useEffect(() => {
     if (!trackingId) return;
     const interval = setInterval(() => {
@@ -81,7 +78,7 @@ export const TrackingPage = () => {
   const statusIdx = parcel ? STATUSES.indexOf(parcel.status) : 0;
 
   let routeLine: [number, number][] = [];
-  let mapCenter: [number, number] = [18.5204, 73.8567]; // Default Pune
+  let mapCenter: [number, number] = [18.5204, 73.8567]; 
   
   if (parcel?.bus?.route?.waypointsJson) {
     try {
@@ -106,7 +103,7 @@ export const TrackingPage = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto animate-fadeInUp space-y-6">
-      {/* Header */}
+      
       <div className="glass-card rounded-xl p-5 border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white">
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Tracking</p>
@@ -126,7 +123,7 @@ export const TrackingPage = () => {
         </div>
       </div>
 
-      {/* Status Timeline */}
+      
       <div className="glass-card rounded-xl p-5 border border-gray-200 bg-white">
         <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Journey Status</h3>
         <div className="flex items-center">
@@ -151,7 +148,7 @@ export const TrackingPage = () => {
         </div>
       </div>
 
-      {/* Map */}
+      
       <div className="glass-card rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white" style={{ height: '420px' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
           <h3 className="text-sm font-semibold flex items-center gap-2 text-gray-800">
@@ -174,14 +171,14 @@ export const TrackingPage = () => {
 
           <Polyline positions={routeLine} color="#14b8a6" weight={3} opacity={0.6} dashArray="8 4" />
 
-          {/* Depot markers */}
+          
           {[parcel.originDepot, parcel.destDepot].filter(Boolean).map((d: any) => (
             <Marker key={d.id} position={[d.lat, d.lng]} icon={depotIcon}>
               <Popup><strong>{d.name}</strong></Popup>
             </Marker>
           ))}
 
-          {/* Bus marker */}
+          
           {busPos && parcel.status === 'IN_TRANSIT' && (
             <Marker position={[busPos.currentLat, busPos.currentLng]} icon={parcel.serviceType === 'LOCAL' ? localBusIcon : intercityBusIcon}>
               <Popup>
@@ -193,10 +190,10 @@ export const TrackingPage = () => {
         </MapContainer>
       </div>
 
-      {/* Delivery & Contact Details */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* QR Code for Pickup */}
+        
         <div className="glass-card rounded-xl p-5 border border-gray-200 bg-white flex items-center gap-6">
           <div className="p-3 bg-white rounded-xl shadow-md border border-gray-100 flex-shrink-0">
             <QRCodeSVG value={qrValue} size={90} level="H" />
@@ -212,7 +209,7 @@ export const TrackingPage = () => {
           </div>
         </div>
 
-        {/* Emergency Contacts */}
+        
         <div className="glass-card rounded-xl p-5 border border-gray-200 bg-white">
           <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-4">
             <ShieldAlert className="w-4 h-4 text-red-500" /> Support & Emergency Contacts
