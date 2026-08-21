@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  
+  <!-- Bus body -->
+  <rect x="80" y="230" width="352" height="160" rx="20" fill="#f59e0b"/>
+  
+  <!-- Bus windshield / windows row -->
+  <rect x="110" y="255" width="80" height="55" rx="8" fill="#0f172a" opacity="0.6"/>
+  <rect x="215" y="255" width="80" height="55" rx="8" fill="#0f172a" opacity="0.6"/>
+  <rect x="320" y="255" width="80" height="55" rx="8" fill="#0f172a" opacity="0.6"/>
+
+  <!-- Bus roof strip -->
+  <rect x="80" y="215" width="352" height="25" rx="10" fill="#d97706"/>
+
+  <!-- Bus wheels -->
+  <circle cx="170" cy="400" r="36" fill="#1e293b"/>
+  <circle cx="170" cy="400" r="18" fill="#475569"/>
+  <circle cx="340" cy="400" r="36" fill="#1e293b"/>
+  <circle cx="340" cy="400" r="18" fill="#475569"/>
+
+  <!-- Parcel box on top of bus -->
+  <rect x="200" y="130" width="112" height="90" rx="8" fill="#ffffff"/>
+  <rect x="200" y="130" width="112" height="18" rx="4" fill="#f59e0b"/>
+  <!-- parcel straps -->
+  <line x1="256" y1="130" x2="256" y2="220" stroke="#f59e0b" stroke-width="6"/>
+  <line x1="200" y1="175" x2="312" y2="175" stroke="#f59e0b" stroke-width="6"/>
+
+  <!-- Route dots at the bottom -->
+  <circle cx="160" cy="470" r="12" fill="#f59e0b"/>
+  <line x1="172" y1="470" x2="330" y2="470" stroke="#f59e0b" stroke-width="4" stroke-dasharray="12 8"/>
+  <circle cx="352" cy="470" r="12" fill="#ffffff"/>
+</svg>

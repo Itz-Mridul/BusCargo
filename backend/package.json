@@ -9,6 +9,9 @@
     "start": "tsx src/index.ts",
     "seed": "tsx prisma/seed.ts"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "keywords": [],
   "type": "commonjs",
   "dependencies": {
